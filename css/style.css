@@ -1,0 +1,199 @@
+body {
+	background-color:#F0F0F0;
+}
+
+h1 {
+    font-size:1.5rem;
+}
+
+li.comment {
+	list-style-type:none;
+}
+ul {
+	padding-left:0;
+}
+ul ul {
+	padding-left:20px;
+	border-left:1px solid rgba(0,0,0,0.1);
+}
+
+ul ul:hover {
+	border-left:1px solid rgba(0,0,0,0.5);
+}
+
+span.OC {
+	background-color:blue;
+	color:white;
+}
+
+a {
+    color:rgba(0,0,0,0.5);
+}
+a:hover {
+    color:black;
+    text-decoration:none;
+}
+
+#ontop {
+    width: 5%;
+    display: none; /* Hidden by default */
+    position: fixed; /* Fixed/sticky position */
+    bottom: 20px; /* Place the button at the bottom of the page */
+    right: 30px; /* Place the button 30px from the right */
+    z-index: 99; /* Make sure it does not overlap */
+    border: none; /* Remove borders */
+    outline: none; /* Remove outline */
+    color: white; /* Text color */
+    cursor: pointer; /* Add a mouse pointer on hover */
+    border-radius: 10px; /* Rounded corners */
+    font-size: 18px; /* Increase font size */
+    fill:white;
+}
+#ontop:hover {
+    fill:#343A40;
+}
+
+#sendComment{
+    background:white;
+    border-color:black;
+    color:black;
+}
+#createPost{
+    background:white;
+    border-color:black;
+    color:black;
+}
+
+
+#menuTop {
+    padding:0;
+}
+
+#menuTop2 {
+    padding:0;
+}
+
+#upper {
+	background: #336900 url(https://styles.redditmedia.com/t5_2tzr0/styles/bannerBackgroundImage_dnmbgyjfwn031.png) no-repeat center / cover;
+    background-position: center top;
+    height: 128px;
+}
+
+.youtubevideo {
+}
+.youtubevideo iframe {
+}
+
+.icons {
+    width:20px;
+    display:inline-block;
+    fill:rgba(0,0,0,0.5);
+    margin:0 5px;
+}
+.icons:hover {
+    fill:black;
+}
+
+.postframe {
+    overflow:hidden;
+    max-width:fit-content;
+    max-height:1000px;
+    transition: max-height 1s;
+}
+
+.postContent {
+	display:flex;
+	min-height:200px;
+}
+
+.postRow {
+    margin-bottom: 10px;
+    margin-top: 10px;
+    /*border: 1px solid rgba(0,0,0,.1);
+    box-shadow: 1px 1px rgba(0,0,0,.2);*/
+}
+
+.postLeft {
+	/*display:inline-block;
+	width:4%;
+	vertical-align: top;*/
+    text-align: center;
+	width:30px;
+}
+
+.postRight {
+	/*display:inline-block;*/
+	display: flex;
+    flex-direction: column;
+	width:100%;
+}
+
+.postBottom {
+    /*border-top:1px solid rgba(0,0,0,.1);*/
+    background:white;
+    margin-top:auto;
+}
+.postlink {
+	color:black;
+}
+.postlink:visited {
+	color:black;
+}
+.postlink:hover {
+	color:black;
+	text-decoration:none;
+}
+
+.vote {
+	width:80%;
+	cursor:pointer;
+}
+.upvote_pressed {
+    fill:green;
+}
+.downvote_pressed {
+    fill:red;
+}
+
+.addComment {
+    color:rgba(0,0,0,0.5);
+    background:none;
+    border:none;
+    cursor:pointer;
+    outline:none;
+}
+.addComment:hover {
+    color:black;
+}
+.addComment:focus {
+    outline:none;
+}
+.commentVote {
+    width: 3%;
+    display: inline-block;
+    text-align: center;
+	vertical-align:top;
+}
+
+.commentInfo {
+    display:inline-block;
+    padding-left:1%;
+	width:96%;
+}
+
+.blured {
+	filter:blur(50px);
+	cursor:pointer;
+}
+
+.navLink {
+	cursor:pointer;
+}
+
+.myPageItem {
+	background-color:#F4F4F4;
+	color: rgba(0,0,0,.5);
+}
+.myPageItem:hover {
+	color: rgba(0,0,0,1);
+}

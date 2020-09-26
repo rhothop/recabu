@@ -1,0 +1,13 @@
+<form method="post">
+	<div class="form-group">
+		<input type="text" class="form-control" name="login" id="login" aria-describedby="emailHelp" placeholder="Логин" />
+		<input type="password" class="form-control" name="psw1" id="psw1" aria-describedby="emailHelp" placeholder="Пароль" />
+		<input type="password" class="form-control" name="psw2" id="psw2" aria-describedby="emailHelp" placeholder="Пароль еще раз" />
+		<input type="text" class="form-control" name="ref" id="ref" aria-describedby="emailHelp" placeholder="Код приглашения" />
+	</div>
+	<div class="form-check">
+		<input type="checkbox" class="form-check-input" name="agree" id="agree">
+		<label class="form-check-label" for="agree">С <a href="/rules/">правилами</a> согласен.</label>
+	</div>
+	<button id="registration" type="submit" class="btn btn-primary">Регистрация</button>
+</form>
