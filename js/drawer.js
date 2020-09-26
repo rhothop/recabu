@@ -70,7 +70,13 @@ function bind() {
 	$( '.loginForm input[type="button"]' ).on( 'click', function() {
 		login( $( '.loginForm input[type="text"]' ).val(), $( '.loginForm input[type="password"]' ).val() );
 	});
+	$( '.loginForm .icons' ).on( 'click', function() {
+		login( $( '.loginForm input[type="text"]' ).val(), $( '.loginForm input[type="password"]' ).val() );
+	});
 	$( '.logoutForm input[type="button"]' ).on( 'click', function() {
+		logout();
+	});
+	$( '.logoutForm .icons' ).on( 'click', function() {
 		logout();
 	});
 	$( '.vote' ).on( 'click', function() {

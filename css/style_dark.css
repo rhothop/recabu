@@ -88,6 +88,7 @@ a:hover {
     display:inline-block;
     fill:rgba(200,200,200,0.5);
     margin:0 5px;
+	vertical-align:sub;
 }
 .icons:hover {
     fill:white;

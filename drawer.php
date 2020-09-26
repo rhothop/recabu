@@ -314,13 +314,13 @@ function drawTopLine() {
     $answer = '';
 	if($user != null) {
 	    $unread = $bd->getUnreadCount($user);
-		$answer .= '<div class="logoutForm"><input type="button" value="Выйти" />Привет, '.$user->name.'. <div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#star"></use></svg></div>'.$user->rating.' <a href="/unread/" title="'.$unread.' '.declOfNum($unread,array('непрочитанное','непрочитанных','непрочитанных')).'"><div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#chat"></use></svg></div>'.$unread.'</a></div>';
+		$answer .= '<div class="logoutForm"><div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#account-logout"></use></svg></div> Привет, '.$user->name.'. <div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#star"></use></svg></div>'.$user->rating.' <a href="/unread/" title="'.$unread.' '.declOfNum($unread,array('непрочитанное','непрочитанных','непрочитанных')).'"><div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#chat"></use></svg></div>'.$unread.'</a></div>';
    	} else {
 		$answer .= '
 		<div class="loginForm">
 		    <input type="text" name="login" />
 		    <input type="password" name="password" />
-		    <input type="button" value="Войти" />
+			<div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#account-login"></use></svg></div>
 		    <a href="/registration/">Зарегистрироваться</a>
 		</div>';
    	}
@@ -365,7 +365,11 @@ function drawPageButton($pageCount, $current) {
 	    $end = $pageCount;
 	}
 	for ($i = $start; $i <= $end; $i++) {
-		$str .= '<li class="page-item"><a class="page-link myPageItem" href="'.$pagelink.'&str='.$i.'">'.$i.'</a></li>';
+		$curpage = '';
+		if($i == $current) {
+			$curpage = ' style="filter: invert(2);"';
+		}
+		$str .= '<li'.$curpage.' class="page-item"><a class="page-link myPageItem" href="'.$pagelink.'&str='.$i.'">'.$i.'</a></li>';
     }
     if($next > $pageCount) {
         //$str .= '<li class="page-item"><a class="page-link myPageItem disabled" >Следующая</a></li>';
