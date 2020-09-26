@@ -112,6 +112,71 @@ function bind() {
 					}))
 				})
 			}).appendTo( $( this ).parent() );
+			$( '<div>', {
+				class: 'icons',
+				append: '<svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#video"></use></svg>'
+			}).prependTo( commentForm ).on( 'click', function() {
+				var input = prompt( 'Вставьте ссылку на mp4 видео. Адрес должен заканчиваться на .mp4', '');
+				if( input != null ) {
+					var cont = $( '#content' ).val();
+					if( cont === '' ) {
+						$( '#content' ).val( '[video]('+input+')' );
+					} else {
+						$( '#content' ).val( cont + ' [video]('+input+')' );
+					}
+				}
+			});
+			$( '<div>', {
+				class: 'icons',
+				append: '<img style="max-width: 100%;vertical-align: text-top;" src="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg" />'
+			}).prependTo( commentForm ).on( 'click', function() {
+				var input = prompt( 'Вставьте ссылку на youtube-видео', '');
+				if( input != null ) {
+					var cont = $( '#content' ).val();
+					if( cont === '' ) {
+						$( '#content' ).val( '[youtube]('+input+')' );
+					} else {
+						$( '#content' ).val( cont + ' [youtube]('+input+')' );
+					}
+				}
+			});
+			$( '<div>', {
+				class: 'icons',
+				append: '<svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#image"></use></svg>'
+			}).prependTo( commentForm ).on( 'click', function() {
+				var input = prompt( 'Вставьте ссылку на изображение', '');
+				if( input != null ) {
+					var cont = $( '#content' ).val();
+					if( cont === '' ) {
+						$( '#content' ).val( '!['+input+']('+input+')' );
+					} else {
+						$( '#content' ).val( cont + ' !['+input+']('+input+')' );
+					}
+				}
+			});
+			$( '<div>', {
+				class: 'icons',
+				append: '<svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#link-intact"></use></svg>'
+			}).prependTo( commentForm ).on( 'click', function() {
+				var input = prompt( 'Вставьте адрес ссылки', '');
+				if( input != null ) {
+					var input2 = prompt( 'Введите текст ссылки', '');
+					var cont = $( '#content' ).val();
+					if( input2 != null ) {
+						if( cont === '' ) {
+							$( '#content' ).val( '!['+input2+']('+input+')' );
+						} else {
+							$( '#content' ).val( cont + ' ['+input2+']('+input+')' );
+						}
+					} else {
+						if( cont === '' ) {
+							$( '#content' ).val( '!['+input+']('+input+')' );
+						} else {
+							$( '#content' ).val( cont + ' ['+input+']('+input+')' );
+						}
+					}
+				}
+			});
 			$( '#sendComment' ).on( 'click', function() {
 				postPost( '', $( '#content' ).val(), $( '#nsfw' ).prop( 'checked' ), false, $( '#target' ).val() );
 			});
