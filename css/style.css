@@ -145,8 +145,10 @@ a:hover {
 }
 
 .vote {
-	width:80%;
+	width:20px;
 	cursor:pointer;
+	fill:white;
+	display:block;
 }
 .upvote_pressed {
     fill:green;

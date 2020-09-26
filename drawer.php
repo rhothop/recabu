@@ -203,11 +203,11 @@ function drawComments( $comments, $user = null, $drawChilds = true ) {
 		$result .= '<div class="postBottom"><a id="comment'.$comment->uid.'"></a><a href="'.$comment->link.'"><div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#link-intact"></use></svg></div></a>Ответ <a href="/user/'.$comment->author.'">'.$comment->author.'</a> '.calcDate($comment->date).'</div>';
 		
 		if(!$comment->blocked) {
-			$result .= '<div';
+			$result .= '<div class="postframe';
 			if($comment->nsfw) {
-				$result .= ' class="blured">';
+				$result .= ' blured">';
 			} else {
-				$result .= '>';
+				$result .= '">';
 			}
 			$result .= updateContent($comment->content).'</div>';
 		} else {
