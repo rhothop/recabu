@@ -314,7 +314,7 @@ function drawTopLine() {
     $answer = '';
 	if($user != null) {
 	    $unread = $bd->getUnreadCount($user);
-		$answer .= '<div class="logoutForm"><div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#account-logout"></use></svg></div> Привет, '.$user->name.'. <div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#star"></use></svg></div>'.$user->rating.' <a href="/unread/" title="'.$unread.' '.declOfNum($unread,array('непрочитанное','непрочитанных','непрочитанных')).'"><div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#chat"></use></svg></div>'.$unread.'</a></div>';
+		$answer .= '<div class="logoutForm"><div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#account-logout"></use></svg></div></div> Привет, '.$user->name.'. <div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#star"></use></svg></div>'.$user->rating.' <a href="/unread/" title="'.$unread.' '.declOfNum($unread,array('непрочитанное','непрочитанных','непрочитанных')).'"><div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#chat"></use></svg></div>'.$unread.'</a></div>';
    	} else {
 		$answer .= '
 		<div class="loginForm">

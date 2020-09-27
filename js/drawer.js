@@ -191,6 +191,60 @@ function bind() {
 			commentForm = undefined;
 		}
 	});
+	
+	$( '#addvideo' ).on( 'click', function() {
+		var input = prompt( 'Вставьте ссылку на mp4 видео. Адрес должен заканчиваться на .mp4', '');
+		if( input != null ) {
+			var cont = $( '#content' ).val();
+			if( cont === '' ) {
+				$( '#content' ).val( '[video]('+input+')' );
+			} else {
+				$( '#content' ).val( cont + ' [video]('+input+')' );
+			}
+		}
+	});
+	$( '#addyoutube' ).on( 'click', function() {
+		var input = prompt( 'Вставьте ссылку на youtube-видео', '');
+		if( input != null ) {
+			var cont = $( '#content' ).val();
+			if( cont === '' ) {
+				$( '#content' ).val( '[youtube]('+input+')' );
+			} else {
+				$( '#content' ).val( cont + ' [youtube]('+input+')' );
+			}
+		}
+	});
+	$( '#addimage' ).on( 'click', function() {
+		var input = prompt( 'Вставьте ссылку на изображение', '');
+		if( input != null ) {
+			var cont = $( '#content' ).val();
+			if( cont === '' ) {
+				$( '#content' ).val( '!['+input+']('+input+')' );
+			} else {
+				$( '#content' ).val( cont + ' !['+input+']('+input+')' );
+			}
+		}
+	});
+	$( '#addlink' ).on( 'click', function() {
+		var input = prompt( 'Вставьте адрес ссылки', '');
+		if( input != null ) {
+			var input2 = prompt( 'Введите текст ссылки', '');
+			var cont = $( '#content' ).val();
+			if( input2 != null ) {
+				if( cont === '' ) {
+					$( '#content' ).val( '!['+input2+']('+input+')' );
+				} else {
+					$( '#content' ).val( cont + ' ['+input2+']('+input+')' );
+				}
+			} else {
+				if( cont === '' ) {
+					$( '#content' ).val( '!['+input+']('+input+')' );
+				} else {
+					$( '#content' ).val( cont + ' ['+input+']('+input+')' );
+				}
+			}
+		}
+	});
 }
 
 //Get the button:
