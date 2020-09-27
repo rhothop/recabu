@@ -39,6 +39,32 @@ function postPost(title, content, nsfw = false, oc = false, parent = 0) {
 	});
 }
 
+function deletePost( id ) {
+	var request = $.ajax({
+		url: '/add/',
+		method: "DELETE",
+		data: { post : id },
+		dataType: "html",
+		beforeSend: function() {
+		}
+	});
+	
+	request.done(function( msg ) {
+	    var answer = readJson( msg );
+	    if( answer.result ) {
+			location.reload();
+		} else {
+			alert(answer.msg);
+	    }
+	});
+	
+	request.fail(function( jqXHR, textStatus ) {
+		console.log( jqXHR.responseText );
+	});
+	request.always(function() {
+	});
+}
+
 function registration(login, psw, ref) {
 	var request = $.ajax({
 		url: '/registration/',

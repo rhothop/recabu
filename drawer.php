@@ -96,6 +96,7 @@ function drawPost( $post, $showAnswerButton = false ) {
     $yourVote = 0;
     $up = '';
     $down = '';
+	$delbutton = '';
     if($user != null) {
         $bd = new bd();
     	$yourVote = $bd->getYourVote($post->uid,$user->ID);
@@ -104,6 +105,9 @@ function drawPost( $post, $showAnswerButton = false ) {
     	} elseif($yourVote == -1) {
     	    $down = ' downvote_pressed';
     	}
+		if($post->author == $user->name) {
+			$delbutton = '<div val="'.$post->uid.'" class="icons deletepost"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#trash"></use></svg></div>';
+		}
     }
     
 	$result = '<div class="row">';
@@ -150,7 +154,10 @@ function drawPost( $post, $showAnswerButton = false ) {
     $result .= '</div>';
 
 	$commentText = declOfNum($post->allCommentsCount,array('комментарий','комментария','комментариев'));
-	$result .= '<div class="postBottom"><a id="comment"></a><a href="/user/'.$post->author.'">'.$post->author.'</a> '.calcDate($post->date).' <a href="'.$post->link.'#comment" title="'.$post->allCommentsCount.' '.$commentText.'"><div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#comment-square"></use></svg></div> '.$post->allCommentsCount.'</a></div>';
+	$result .= '<div class="postBottom">
+	<a id="comment"></a>
+	<a href="/user/'.$post->author.'">'.$post->author.'</a> '.calcDate($post->date).' <a href="'.$post->link.'#comment" title="'.$post->allCommentsCount.' '.$commentText.'">
+	<div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#comment-square"></use></svg></div> '.$post->allCommentsCount.'</a>'.$delbutton.'</div>';
 	
 	if( $showAnswerButton ) {
 		$result .= '<div val_target="'.$post->uid.'"><button class="addComment" type="" class="btn btn-secondary">Ответить</button></div>';
@@ -182,13 +189,17 @@ function drawComments( $comments, $user = null, $drawChilds = true ) {
         $yourVote = 0;
         $up = '';
         $down = '';
-        if($user != null) {
+		$delbutton = '';
+		if($user != null) {
         	$yourVote = $bd->getYourVote($comment->uid,$user->ID);
         	if($yourVote == 1) {
         	    $up = ' upvote_pressed';
         	} elseif($yourVote == -1) {
         	    $down = ' downvote_pressed';
         	}
+			if($comment->author == $user->name) {
+				$delbutton = '<div val="'.$comment->uid.'" class="icons deletepost"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#trash"></use></svg></div>';
+			}
         }
 
 		$result .= '<li class="comment">';
@@ -200,7 +211,10 @@ function drawComments( $comments, $user = null, $drawChilds = true ) {
 	    $result .= '</div>';
 		
 		$result .= '<div class="commentInfo">';
-		$result .= '<div class="postBottom"><a id="comment'.$comment->uid.'"></a><a href="'.$comment->link.'"><div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#link-intact"></use></svg></div></a>Ответ <a href="/user/'.$comment->author.'">'.$comment->author.'</a> '.calcDate($comment->date).'</div>';
+		$result .= '<div class="postBottom">
+		<a id="comment'.$comment->uid.'"></a><a href="'.$comment->link.'">
+		<div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#link-intact"></use></svg></div>
+		</a>Ответ <a href="/user/'.$comment->author.'">'.$comment->author.'</a> '.calcDate($comment->date).' '.$delbutton.'</div>';
 		
 		if(!$comment->blocked) {
 			$result .= '<div class="postframe';

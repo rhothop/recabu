@@ -13,6 +13,9 @@ function bind() {
           document.body.scrollTop = 0; // For Safari
           document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
     });
+	$( '.deletepost' ).on( 'click', function() {
+		deletePost( $( this ).attr( 'val' ) );
+	});
     $( '#registration' ).on( 'click', function() {
         event.preventDefault();
         var login = $( '#login' ).val();

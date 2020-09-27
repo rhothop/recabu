@@ -30,6 +30,10 @@ function route($method, $urlData, $formData) {
 		$db = new bd();
 		$result = $db->addPost($formData['title'], $formData['content'], $inNsfw, $inOc, $inParent);
 		return $result;
+	} elseif ($method === 'DELETE' && count($urlData) === 0) {
+		$db = new bd();
+		$result = $db->delPost($formData['post'], $_COOKIE['auth']);
+		return $result;
 	}
  
     header('HTTP/1.0 400 Bad Request');

@@ -641,7 +641,7 @@ class bd extends mysqli {
 		                $this->query('INSERT INTO `unreaded`(`postID`, `target`, `unread`) VALUES ('.$msgID.','.$cur->author.',1)');
 		            }
 		        } else {
-		            var_dump($this->error);
+		            //var_dump($this->error);
 		        }
 		    }
             $this->query('INSERT INTO `rating`(`post`, `author`, `val`) VALUES ('.$msgID.','.$user->ID.',1)');
@@ -667,6 +667,19 @@ class bd extends mysqli {
 		} else {
 		    return '{"result":false,"content":"","msg":"'.$this->error.'"}';
 			//return $this->error.'<br />'.$queryText;
+		}
+	}
+	
+	function delPost($id, $token) {
+		$user = $this->getUserByToken( $token );
+		if($user != null) {
+			if($this->query('UPDATE `posts` SET `blocked` = 1 WHERE `_id` = '.$id.' AND `author` = '.$user->ID)) {
+				return '{"result":true,"content":"","msg":""}';
+			} else {
+				return '{"result":false,"content":"","msg":"'.$this->error.'"}';
+			}
+		} else {
+			return '{"result":false,"content":"","msg":"Ублюдок, мать твою, а ну иди сюда, говно собачье, решил ко мне лезть? Ты, засранец вонючий, мать твою, а? Ну иди сюда, попробуй меня трахнуть, я тебя сам трахну"}';
 		}
 	}
 	
