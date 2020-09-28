@@ -338,7 +338,7 @@ function drawTopLine() {
 		</div> 
 		Привет, '.$user->name.' 
 		<div style="align-self: center;"><div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#star"></use></svg></div>'.$user->rating.'</div>
-		<div style="align-self: center;"><div class="icons"><svg viewBox="0 0 8 8"><a href="/unread/" title="'.$unread.' '.declOfNum($unread,array('непрочитанное','непрочитанных','непрочитанных')).'"><use xlink:href="/images/sprite.svg#chat"></use></svg></div>'.$unread.'</a></div>';
+		<a href="/unread/" title="'.$unread.' '.declOfNum($unread,array('непрочитанное','непрочитанных','непрочитанных')).'"><div style="align-self: center;"><div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#chat"></use></svg></div>'.$unread.'</div></a>';
    	} else {
 		$answer .= '
 		<div class="loginForm">

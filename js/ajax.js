@@ -7,6 +7,39 @@ function readJson( str ) {
     }
     return result;
 }
+
+function sendFile( file ) {
+	var request = $.ajax({
+		url: '/upload/',
+		method: "POST",
+		data: file,
+		processData: false,
+        contentType: false,
+		beforeSend: function() {
+		}
+	});
+	
+	request.done(function( msg ) {
+	    var answer = readJson( msg );
+	    if( answer.result ) {
+			var cont = $( '#content' ).val();
+			if( cont === '' ) {
+				$( '#content' ).val( '![picture]('+answer.content+')' );
+			} else {
+				$( '#content' ).val( cont + ' ![picture]('+answer.content+')' );
+			}
+			$( '#addfile' ).val( '' );
+	    } else {
+	        alert(answer.msg);
+	    }
+	});
+	
+	request.fail(function( jqXHR, textStatus ) {
+		console.log( jqXHR.responseText );
+	});
+	request.always(function() {
+	});}
+
 function postPost(title, content, nsfw = false, oc = false, parent = 0) {
 	var request = $.ajax({
 		url: '/add/',

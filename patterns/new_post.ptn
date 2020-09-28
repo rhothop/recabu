@@ -8,6 +8,7 @@
 		<div id="addyoutube" class="icons"><img style="max-width: 100%;vertical-align: text-top;" src="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg" /></div>
 		<div id="addimage" class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#image"></use></svg></div>
 		<div id="addlink" class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#link-intact"></use></svg></div>
+		<input type="file" id="addfile" accept="image/jpeg,image/png,image/gif" />
 		<textarea class="form-control" name="content" id="content" placeholder="Пост"></textarea>
 	</div>
 	<div class="form-check">

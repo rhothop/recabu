@@ -13,6 +13,14 @@ function bind() {
           document.body.scrollTop = 0; // For Safari
           document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
     });
+	$( '#addfile' ).on( 'change', function() {
+		var img = $( this )[0].files[0];
+		var fd = new FormData;
+		
+		fd.append( 'img', img );
+		
+		sendFile( fd );
+	});
 	$( '.deletepost' ).on( 'click', function() {
 		deletePost( $( this ).attr( 'val' ) );
 	});
