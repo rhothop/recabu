@@ -121,10 +121,15 @@ function drawPost( $post, $showAnswerButton = false ) {
 	$result .= '</div>';
 	$result .= '<div class="postRight">';
 	$result .= '<h1>';
-	if( $post->link != '') {
-		$result .= '<a class="postlink" href="'.$post->link.'">'.$post->title.'</a>';
+	if($post->blocked) {
+		$title = '[Пост удален]';
 	} else {
-		$result .= $post->title;
+		$title = $post->title;
+	}
+	if( $post->link != '') {
+		$result .= '<a class="postlink" href="'.$post->link.'">'.$title.'</a>';
+	} else {
+		$result .= $title;//$post->title;
 	}
 	if( $post->oc ) {
 		$result .= ' <span class="OC">OC</span>';
@@ -147,7 +152,7 @@ function drawPost( $post, $showAnswerButton = false ) {
 	if(!$post->blocked) {
 		$result .= updateContent( $post->content );
 	} else {
-	    $result .= updateContent( '~~здесь было что-то нехорошее~~' );
+	    $result .= updateContent( '~~пост~~' );
 	}
 	$result .= '</div>';
 	
@@ -225,7 +230,7 @@ function drawComments( $comments, $user = null, $drawChilds = true ) {
 			}
 			$result .= updateContent($comment->content).'</div>';
 		} else {
-		    $result .= '<div>'.updateContent( '~~здесь было что-то нехорошее~~' ).'</div>';
+		    $result .= '<div>'.updateContent( '~~коммент~~' ).'</div>';
 		}
 		
 		$result .= '<div val_target="'.$comment->uid.'"><button class="addComment" type="" class="btn btn-secondary">Ответить</button></div>';

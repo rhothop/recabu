@@ -491,14 +491,13 @@ class bd extends mysqli {
 		GROUP BY
 			`posts`.`_id`
         ORDER BY
-        	SUM(`rating`.`val`) DESC
+        	rating
 		LIMIT 10
 		OFFSET '.($str-1)*10;
-
+//SUM(`rating`.`val`) DESC
 		if($query = $this->query($queryText)) {
 			while($cur = $query->fetch_object()) {
 				$post = new postObject($cur->postID, $cur->postTitle, $cur->postContent, $cur->author, $cur->postDate, $cur->link, $cur->NSFW, $cur->OC, $cur->rating, $cur->ban);
-				//$post->rating = $this->getRating($post->uid);
 				$post->allCommentsCount = $this->getChildsCount($post->uid);
 				$posts[] = $post;
 			}
@@ -592,6 +591,51 @@ class bd extends mysqli {
 		}
 		return $posts;
 	}	
+	
+	function getHotPosts($str = 1) {
+		$posts = array();
+		$queryText = 'SELECT
+			`posts`.`name` AS link,
+			`posts`.`_id` AS postID, 
+			`posts`.`title` AS postTitle, 
+			`posts`.`content` AS postContent, 
+			`posts`.`nsfw` AS NSFW,
+			`posts`.`oc` AS OC,
+			`posts`.`date` AS postDate,
+			`posts`.`blocked` AS ban,
+			`users`.`name` AS author,
+            IFNULL(SUM(`rating`.`val`),0) AS rating,
+			IFNULL(SUM(`rating`.`val`),0) / TIME_TO_SEC(TIMEDIFF(NOW(),`posts`.`date`)) AS hot
+		FROM 
+			`posts`
+		LEFT JOIN 
+			`users` 
+		ON 
+			`posts`.`author` = `users`.`_id`
+        LEFT JOIN
+        	`rating`
+        ON
+        	`posts`.`_id` = `rating`.`post`
+		WHERE 
+			`posts`.`parent` = 0
+		GROUP BY
+			`posts`.`_id`
+        ORDER BY
+        	hot DESC,
+			postDate DESC
+		LIMIT 10
+		OFFSET '.($str-1)*10;
+
+		if($query = $this->query($queryText)) {
+			while($cur = $query->fetch_object()) {
+				$post = new postObject($cur->postID, $cur->postTitle, $cur->postContent, $cur->author, $cur->postDate, $cur->link, $cur->NSFW, $cur->OC, $cur->rating, $cur->ban);
+				//$post->rating = $this->getRating($post->uid);
+				$post->allCommentsCount = $this->getChildsCount($post->uid);
+				$posts[] = $post;
+			}
+		}
+		return $posts;
+	}
 		
 	function addPost( $cTitle, $cContent, $cNsfw, $cOc, $cParent ) {
 		
