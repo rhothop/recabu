@@ -337,7 +337,7 @@ function drawTopLine() {
 			<div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#account-logout"></use></svg></div>
 		</div> 
 		Привет, '.$user->name.' 
-		<div style="align-self: center;"><div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#star"></use></svg></div>'.$user->rating.'</div>
+		<div style="align-self: flex-start;"><div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#star"></use></svg></div>'.$user->rating.'</div>
 		<a href="/unread/" title="'.$unread.' '.declOfNum($unread,array('непрочитанное','непрочитанных','непрочитанных')).'"><div style="align-self: center;"><div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#chat"></use></svg></div>'.$unread.'</div></a>';
    	} else {
 		$answer .= '
@@ -350,7 +350,7 @@ function drawTopLine() {
    	}
     $usersCount = $bd->getUsersCount();
     if($usersCount != null) {
-        $answer .= '<div style="align-self: center;"><div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#people"></use></svg></div>'.$usersCount.'</div>';
+        $answer .= '<div style="align-self: flex-start;"><div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#people"></use></svg></div>'.$usersCount.'</div>';
     }
     return $answer;
 }
