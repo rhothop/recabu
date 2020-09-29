@@ -129,6 +129,18 @@ function bind() {
 					}))
 				})
 			}).appendTo( $( this ).parent() );
+			$( '<input>', {
+				type: 'file',
+				id: 'addfile',
+				accept: 'image/jpeg,image/png,image/gif'
+			}).prependTo( commentForm ).on( 'change', function() {
+				var img = $( this )[0].files[0];
+				var fd = new FormData;
+				
+				fd.append( 'img', img );
+				
+				sendFile( fd );
+			});
 			$( '<div>', {
 				class: 'icons',
 				append: '<svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#video"></use></svg>'

@@ -355,6 +355,12 @@ class bd extends mysqli {
 				$post = new postObject($cur->postID, $cur->postTitle, $cur->postContent, $cur->author, $cur->postDate, $name, $cur->NSFW, $cur->OC, $cur->rating, $cur->ban);
 				$post->allCommentsCount = $this->getChildsCount($post->uid);
 				$childs = $this->getChilds($post->uid,$name);
+				if(isset($_COOKIE['auth'])) {
+			        $user = $this->getUserByToken($_COOKIE['auth']);
+			        if($user->ID > 0) {
+			            $this->query('UPDATE `unreaded` SET `unread`= 0 WHERE `postID` = '.$cur->postID.' AND `target` = '.$user->ID);
+			        }
+			    }
 				foreach($childs as $child) {
 					$post->childs[] = $child;
 				}
