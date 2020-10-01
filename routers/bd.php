@@ -309,7 +309,7 @@ class bd extends mysqli {
 		}
 		$user = $this->getUserByToken( $_COOKIE['auth'] );
 		if($user->ID == 0) {
-			return 'hui';
+			return '{"result":false,"content":"","msg":"Необходимо авторизоваться"}';
 		}
 		if($query = $this->query('SELECT * FROM `rating` WHERE `post` = '.$target.' AND `author` = '.$user->ID)) {
 			if($query->num_rows > 0) {
@@ -319,8 +319,11 @@ class bd extends mysqli {
 			} else {
 				$this->query('INSERT INTO `rating`(`post`, `author`, `val`) VALUES ('.$target.','.$user->ID.','.$valForVote.')');
 			}
+			return '{"result":true,"content":"","msg":""}';
+		} else {
+			return '{"result":false,"content":"","msg":"'.$this->error.'"}';
 		}
-		
+		return '{"result":true,"content":"","msg":"Необходимо авторизоваться"}';
 	}
 
 	function getPost( $name ) {
@@ -647,13 +650,13 @@ class bd extends mysqli {
 		
 		$user = $this->getUserByToken( $_COOKIE['auth'] );
 		if($user->ID == 0) {
-			return '{"result":false,"content":"","msg":"Только зарегистрированные пользователи могу это делать"}';
+			return '{"result":false,"content":"","msg":"Только зарегистрированные пользователи могут это делать"}';
 		}
 		if($user->rating < -50 && $cParent == 0) {
 			return '{"result":false,"content":"","msg":"Ваш рейтинг слишком мал для постов!"}';;
 		}
 		if($user->rating < -100 && $cParent != 0) {
-			return '{"result":false,"content":"","msg":"ПОльзователи забанили Вас по рейтингу"}';;
+			return '{"result":false,"content":"","msg":"Пользователи забанили Вас по рейтингу"}';;
 		}
 		
 		if( $cParent == 0 ) {

@@ -188,7 +188,12 @@ function votePost( target, val ) {
 	});
 	
 	request.done(function( msg ) {
-		location.reload();
+		var answer = readJson( msg );
+		if( answer.result ) {
+			location.reload();
+		} else {
+			alert( answer.msg );
+		}
 	});
 	
 	request.fail(function( jqXHR, textStatus ) {

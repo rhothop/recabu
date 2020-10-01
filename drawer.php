@@ -150,7 +150,11 @@ function drawPost( $post, $showAnswerButton = false ) {
 	}
 	
 	if(!$post->blocked) {
-		$result .= updateContent( $post->content );
+		if($post->nsfw && $user->ID == 0) {
+			$result .= 'Пост скрыт';
+		} else {
+			$result .= updateContent( $post->content );
+		}
 	} else {
 	    $result .= updateContent( '~~пост~~' );
 	}
@@ -228,9 +232,19 @@ function drawComments( $comments, $user = null, $drawChilds = true ) {
 			} else {
 				$result .= '">';
 			}
-			$result .= updateContent($comment->content).'</div>';
+			if($comment->nsfw) {
+				if($user == null) {
+					$result .= 'Пост скрыт</div>';
+				} elseif($user->ID == 0) {
+					$result .= 'Пост скрыт</div>';
+				} else {
+					$result .= updateContent($comment->content).'</div>';
+				}
+			} else {
+				$result .= updateContent($comment->content).'</div>';
+			}
 		} else {
-		    $result .= '<div>'.updateContent( '~~коммент~~' ).'</div>';
+		    $result .= updateContent( '~~коммент~~' ).'</div>';
 		}
 		
 		$result .= '<div val_target="'.$comment->uid.'"><button class="addComment" type="" class="btn btn-secondary">Ответить</button></div>';
@@ -274,7 +288,7 @@ function updateContent( $content ) {
 	foreach( $matches[0] as $match ) {
 	    $mass = array();
 	    preg_match($markdown1, $match, $mass);
-	    $result = str_replace( $match, '<img style="max-width:100%;" src="'.$mass[2].'" alt="'.$mass[1].'" title="'.str_replace('"', '', $mass[3]).'" />', $result);
+	    $result = str_replace( $match, '<div><img style="max-width:100%;" src="'.$mass[2].'" alt="'.$mass[1].'" title="'.str_replace('"', '', $mass[3]).'" /></div>', $result);
 	}
 	
 	$markdown2 = '/\[(.+)\]\((\S+)\)/';
