@@ -398,7 +398,9 @@ class bd extends mysqli {
 		WHERE 
 			`posts`.`parent` = '.$id.'
 		GROUP BY
-			`posts`.`_id`';
+			`posts`.`_id`
+		ORDER BY
+			rating DESC';
 		if($query = $this->query($queryText)) {
 			while($cur = $query->fetch_object()) {
 			    if(isset($_COOKIE['auth'])) {
@@ -500,7 +502,7 @@ class bd extends mysqli {
 		GROUP BY
 			`posts`.`_id`
         ORDER BY
-        	rating
+        	rating DESC
 		LIMIT 10
 		OFFSET '.($str-1)*10;
 //SUM(`rating`.`val`) DESC
