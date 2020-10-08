@@ -79,6 +79,10 @@ a:hover {
     height: 128px;
 }
 
+.clickable {
+	cursor:pointer;
+}
+
 .youtubevideo {
 }
 .youtubevideo iframe {

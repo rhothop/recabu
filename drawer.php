@@ -106,7 +106,7 @@ function drawPost( $post, $showAnswerButton = false ) {
     	    $down = ' downvote_pressed';
     	}
 		if($post->author == $user->name) {
-			$delbutton = '<div val="'.$post->uid.'" class="icons deletepost"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#trash"></use></svg></div>';
+			$delbutton = '<div val="'.$post->uid.'" class="icons deletepost clickable"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#trash"></use></svg></div>';
 		}
     }
 	
@@ -177,84 +177,6 @@ function drawPost( $post, $showAnswerButton = false ) {
 	//$result .= '</div>';
 	
 	return $result;
-	
-	
- 	$result .= '<div class="col-lg-1"></div>';
-	$result .= '</div>';
-   
-	$result = '<div class="row">';
-	$result .= '<div class="col-lg-1"></div>';
-	$result .= '<div class="col-sm-10 postRow">';
-    $result .= '<div class="postContent">';
-	$result .= '<div class="postLeft">';
-	$result .= '<svg class="vote'.$up.'" val_target="'.$post->uid.'" val_data="1" viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#caret-top"></use></svg>';
-	$result .= '<span class="vote" val_target="'.$post->uid.'"  val_data="0">'.$post->rating.'</span>';
-	$result .= '<svg class="vote'.$down.'" val_target="'.$post->uid.'"  val_data="-1" viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#caret-bottom"></use></svg>';
-	$result .= '</div>';
-	$result .= '<div class="postRight">';
-	$result .= '<h1>';
-	if($post->blocked) {
-		$title = '[Пост удален]';
-	} else {
-		$title = $post->title;
-	}
-	if( $post->link != '') {
-		$result .= '<a class="postlink" href="'.$post->link.'">'.$title.'</a>';
-	} else {
-		$result .= $title;//$post->title;
-	}
-	if( $post->oc ) {
-		$result .= ' <span class="OC">OC</span>';
-	}
-	$result .= '</h1>';
-	
-	$result .= '<div class="postframe"';
-	if($showAnswerButton) {
-	    $result .= ' style="max-height:100%;"';
-	}
-	$result .= '>';
-	
-	$result .= '<div val_type="post" val_target="'.$post->uid.'" class="post';
-	if( $post->nsfw ) {
-		$result .= ' blured">';
-	} else {
-		$result .= '">';
-	}
-	
-	if(!$post->blocked) {
-		if($post->nsfw && $user->ID == 0) {
-			$result .= 'Пост скрыт';
-		} else {
-			$result .= updateContent( $post->content );
-		}
-	} else {
-	    $result .= updateContent( '~~пост~~' );
-	}
-	$result .= '</div>';
-	
-    //$result .= '</div>';
-
-	$commentText = declOfNum($post->allCommentsCount,array('комментарий','комментария','комментариев'));
-	$result .= '<div class="postBottom">
-	<a id="comment"></a>
-	<a href="/user/'.$post->author.'">'.$post->author.'</a> '.calcDate($post->date).' <a href="'.$post->link.'#comment" title="'.$post->allCommentsCount.' '.$commentText.'">
-	<div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#comment-square"></use></svg></div> '.$post->allCommentsCount.'</a>'.$delbutton.'</div>';
-	
-	if( $showAnswerButton ) {
-		$result .= '<div val_target="'.$post->uid.'"><button class="addComment" type="" class="btn btn-secondary">Ответить</button></div>';
-	}
-
-	
-	$result .= drawComments( $post->childs, $user, true );
-	
-	$result .= '</div>';
-	$result .= '</div>';
-	$result .= '</div>';
-	$result .= '</div>';
-	$result .= '<div class="col-lg-1"></div>';
-	$result .= '</div>';
-	
-	return $result;
 		
 }
 
@@ -280,7 +202,7 @@ function drawComments( $comments, $user = null, $drawChilds = true ) {
         	    $down = ' downvote_pressed';
         	}
 			if($comment->author == $user->name) {
-				$delbutton = '<div val="'.$comment->uid.'" class="icons deletepost"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#trash"></use></svg></div>';
+				$delbutton = '<div val="'.$comment->uid.'" class="icons deletepost clickable"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#trash"></use></svg></div>';
 			}
         }
 
@@ -301,8 +223,8 @@ function drawComments( $comments, $user = null, $drawChilds = true ) {
 		<div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#link-intact"></use></svg></div>
 		</a>Ответ <a href="/user/'.$comment->author.'">'.$comment->author.'</a> '.calcDate($comment->date).' '.$delbutton.'</div>';
 		
+		$result .= '<div class="postframe';
 		if(!$comment->blocked) {
-			$result .= '<div class="postframe';
 			if($comment->nsfw) {
 				$result .= ' blured">';
 			} else {
@@ -320,7 +242,7 @@ function drawComments( $comments, $user = null, $drawChilds = true ) {
 				$result .= updateContent($comment->content).'</div>';
 			}
 		} else {
-		    $result .= updateContent( '~~коммент~~' ).'</div>';
+		    $result .= '">'.updateContent( '~~коммент~~' ).'</div>';
 		}
 		
 		$result .= '<div val_target="'.$comment->uid.'"><button class="addComment" type="" class="btn btn-secondary">Ответить</button></div>';
