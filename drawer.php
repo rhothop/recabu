@@ -109,7 +109,79 @@ function drawPost( $post, $showAnswerButton = false ) {
 			$delbutton = '<div val="'.$post->uid.'" class="icons deletepost"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#trash"></use></svg></div>';
 		}
     }
-    
+	
+	$result = '<div class="row">';
+	$result .= '<div class="col-lg-1"></div>';
+	
+	$result .= '<div class="col-1 postLeft">';
+		
+	$result .= '<svg class="vote'.$up.'" val_target="'.$post->uid.'" val_data="1" viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#caret-top"></use></svg>';
+	$result .= '<span class="vote" val_target="'.$post->uid.'"  val_data="0">'.$post->rating.'</span>';
+	$result .= '<svg class="vote'.$down.'" val_target="'.$post->uid.'"  val_data="-1" viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#caret-bottom"></use></svg>';
+	
+	$result .= '</div>';
+	
+	$result .= '<div class="col-11 col-lg-8 postframe">';
+		
+	$result .= '<h1>';
+	if($post->blocked) {
+		$title = '[Пост удален]';
+	} else {
+		$title = $post->title;
+	}
+	if( $post->link != '') {
+		$result .= '<a class="postlink" href="'.$post->link.'">'.$title.'</a>';
+	} else {
+		$result .= $title;//$post->title;
+	}
+	if( $post->oc ) {
+		$result .= ' <span class="OC">OC</span>';
+	}
+	$result .= '</h1>';
+		
+	if(!$post->blocked) {
+		if($post->nsfw && $user->ID == 0) {
+			$result .= 'Пост скрыт';
+		} else {
+			$result .= updateContent( $post->content );
+		}
+	} else {
+	    $result .= updateContent( '~~пост~~' );
+	}
+	
+	$result .= '</div>';
+	$result .= '<div class="w-100"></div>';
+	$result .= '<div class="col-lg-2"></div>';
+	
+	$result .= '<div class="col-12 col-lg-10 postBottom">';
+	
+	$result .= '<a id="comment"></a>';
+	$result .= '<a href="/user/'.$post->author.'">'.$post->author.'</a> '.calcDate($post->date).' <a href="'.$post->link.'#comment" title="'.$post->allCommentsCount.' '.$commentText.'">';
+	$result .= '<div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#comment-square"></use></svg></div> '.$post->allCommentsCount.'</a>'.$delbutton;
+	
+	$result .= '</div>';
+	
+	$result .= '<div class="col-lg-2"></div>';
+	
+	$result .= '<div class="col-12 col-lg-10">';
+	if( $showAnswerButton ) {
+		$result .= '<div val_target="'.$post->uid.'"><button class="addComment" type="" class="btn btn-secondary">Ответить</button></div>';
+	}
+	
+	$result .= drawComments( $post->childs, $user, true );
+	
+	$result .= '</div>';
+	
+	$result .= '</div>';
+	//$result .= '</div>';
+	//$result .= '</div>';
+	
+	return $result;
+	
+	
+ 	$result .= '<div class="col-lg-1"></div>';
+	$result .= '</div>';
+   
 	$result = '<div class="row">';
 	$result .= '<div class="col-lg-1"></div>';
 	$result .= '<div class="col-sm-10 postRow">';
@@ -160,7 +232,7 @@ function drawPost( $post, $showAnswerButton = false ) {
 	}
 	$result .= '</div>';
 	
-    $result .= '</div>';
+    //$result .= '</div>';
 
 	$commentText = declOfNum($post->allCommentsCount,array('комментарий','комментария','комментариев'));
 	$result .= '<div class="postBottom">
@@ -175,6 +247,7 @@ function drawPost( $post, $showAnswerButton = false ) {
 	
 	$result .= drawComments( $post->childs, $user, true );
 	
+	$result .= '</div>';
 	$result .= '</div>';
 	$result .= '</div>';
 	$result .= '</div>';
@@ -211,15 +284,18 @@ function drawComments( $comments, $user = null, $drawChilds = true ) {
 			}
         }
 
-		$result .= '<li class="comment">';
+		//$result .= '<li class="comment">';
+		$result .= '<li class="row">';
 		
-		$result .= '<div class="commentVote">';
+		//$result .= '<div class="commentVote">';
+		$result .= '<div class="col-1 postLeft">';
 	    $result .= '<svg class="vote'.$up.'" val_target="'.$comment->uid.'" val_data="1" viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#caret-top"></use></svg>';
 	    $result .= '<span class="vote" val_target="'.$comment->uid.'"  val_data="0">'.$comment->rating.'</span>';
 	    $result .= '<svg class="vote'.$down.'" val_target="'.$comment->uid.'"  val_data="-1" viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#caret-bottom"></use></svg>';
 	    $result .= '</div>';
 		
-		$result .= '<div class="commentInfo">';
+		//$result .= '<div class="commentInfo">';
+		$result .= '<div class="col-11">';
 		$result .= '<div class="postBottom">
 		<a id="comment'.$comment->uid.'"></a><a href="'.$comment->link.'">
 		<div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#link-intact"></use></svg></div>
@@ -370,6 +446,8 @@ function drawTopLine() {
 }
 
 function drawPageButton($pageCount, $current) {
+	$maxPageCount = 10;
+	
     $uri = $_SERVER['REQUEST_URI'];
     $uri = str_replace('&str='.$current,'',$uri);
     $uri = str_replace('str='.$current,'',$uri);
@@ -383,18 +461,18 @@ function drawPageButton($pageCount, $current) {
     
 	$str = '<nav aria-label="Pages">';
 	$str .= '<ul class="pagination">';
-	$str .= '<li class="page-item"><a class="page-link myPageItem" href="'.$pagelink.'">Начало</a></li>';
+	$str .= '<li class="page-item"><a class="page-link myPageItem" href="'.$pagelink.'">1<<</a></li>';
 	if($prev < 1) {
 	    //$str .= '<li class="page-item"><a class="page-link myPageItem disabled" >Предыдущая</a></li>';
 	} else {
 	    $str .= '<li class="page-item"><a class="page-link myPageItem" href="'.$pagelink.'&str='.$prev.'"><<</a></li>';
 	}
-	if($pageCount > 10) {
+	if($pageCount > $maxPageCount) {
 	    $start = $current-4;
 	    if($start < 1) {
 	        $start = 1;
 	    }
-	    $end = $current+4;
+	    $end = $start+$maxPageCount-1;
 	    if($end > $pageCount) {
 	        $end = $pageCount;
 	    }
