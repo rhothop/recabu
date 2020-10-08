@@ -114,27 +114,19 @@ a:hover {
 .postRow {
     margin-bottom: 10px;
     margin-top: 10px;
-    /*border: 1px solid rgba(0,0,0,.1);
-    box-shadow: 1px 1px rgba(0,0,0,.2);*/
 }
 
 .postLeft {
-	/*display:inline-block;
-	width:4%;
-	vertical-align: top;*/
     text-align: center;
-	width:30px;
 }
 
 .postRight {
-	/*display:inline-block;*/
 	display: flex;
     flex-direction: column;
 	width:100%;
 }
 
 .postBottom {
-    /*border-top:1px solid rgba(0,0,0,.1);*/
     background:white;
     margin-top:auto;
 }

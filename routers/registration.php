@@ -10,7 +10,13 @@ function route($method, $urlData, $formData) {
         if(isset($_COOKIE['auth'])) {
             return 'Вы уже зарегистрированы и авторизованы';
         } else {
-            return file_get_contents( './patterns/registration.ptn' );
+			$content = file_get_contents( './patterns/registration.ptn' );
+			if(isset($_GET['ref'])) {
+				$content = str_replace('%refrefcode%',$_GET['ref'],$content);
+			} else {
+				$content = str_replace('%refrefcode%','',$content);
+			}
+            return $content;
         }
     }
     

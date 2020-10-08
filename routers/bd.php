@@ -37,18 +37,28 @@ class bd extends mysqli {
             }
         }
     }
+	
+	function getRefCode($user) {
+		$queryText = 'SELECT `ref` FROM `users` WHERE `_id` = '.$user->ID;
+		if($query = $this->query($queryText)) {
+			while($cur = $query->fetch_object()) {
+				return $cur->ref;
+			}
+		}
+		return '';
+	}
 
 	function regNewUser( $login, $psw, $invite = '') {
-	    $refEnabled = false;
+	    $refEnabled = true;
 	    if(!isset($login) || !isset($psw)) {
 	        return 'Bad bad boy';
 	    }
 	    if($refEnabled) {
-	        if($query = $this->query('SELECT * FROM `users` WHERE `invite` = "'.$invite.'"')) {
+	        if($query = $this->query('SELECT * FROM `users` WHERE `ref` = "'.$invite.'"')) {
 	            if($query->num_rows == 0) {
 	                return 'Нет такого кода приглашения';
 	            } else {
-	                if($query = $this->query('SELECT * FROM `users` WHERE `ref` = "'.$invite.'"')) {
+	                if($query = $this->query('SELECT * FROM `users` WHERE `invite` = "'.$invite.'"')) {
 	                    if($query->num_rows > 0) {
 	                        return 'Этот кода приглашения уже использован';
 	                    }
@@ -69,7 +79,7 @@ class bd extends mysqli {
 	    } else {
 	        return $this->error;
 	    }
-	    $queryText = 'INSERT INTO `users`(`name`, `psw`, `invite`) VALUES ("'.$login.'","'.$hash.'", "'.$invite.'")';
+	    $queryText = 'INSERT INTO `users`(`name`, `psw`, `invite`, `ref`) VALUES ("'.$login.'","'.$hash.'", "'.$invite.'","'.md5($login.time()).'")';
 	    if($this->query($queryText)) {
 	        return 'good';
 	    } else {

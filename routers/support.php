@@ -5,7 +5,7 @@ include_once('./drawer.php');
 
 function route($method, $urlData, $formData) {
      
-    if ($method === 'GET' && count($urlData) === 1) {
+    if ($method === 'GET') {
         $action = $urlData[0];
  		$db = new bd();
 		

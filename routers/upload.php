@@ -9,7 +9,7 @@ function route($method, $urlData, $formData) {
 		if(is_writable($uploaddir)){ 
 			$hashtime = md5(time());
 			$upfile = $_FILES['img'];
-			$newfilename = $hashtime.'_'.$upfile['name'];
+			$newfilename = $hashtime.'_'.str_replace(' ','_',$upfile['name']);
 			$newfile = $uploaddir.$newfilename;
 			move_uploaded_file($upfile['tmp_name'],$newfile);
 			return '{"result":true,"content":"/uploads/'.$newfilename.'","msg":""}';

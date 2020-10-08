@@ -107,7 +107,6 @@ a:hover {
     transition: max-height 1s;
 }
 .postframe:hover {
-    /*max-height:100%;*/
 }
 
 .postContent {
@@ -118,13 +117,10 @@ a:hover {
 .postRow {
     margin-bottom: 10px;
     margin-top: 10px;
-    /*border: 1px solid rgba(200,200,200,.1);
-    box-shadow: 1px 1px rgba(200,200,200,.2);*/
 }
 
 .postLeft {
     text-align: center;
-	width:30px;
 }
 
 .postRight {
@@ -134,7 +130,6 @@ a:hover {
 }
 
 .postBottom {
-    /*border-top:1px solid rgba(200,200,200,.5);*/
     margin-top:auto;
     background: rgba(52, 58, 64,.5);
 }

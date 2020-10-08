@@ -113,15 +113,19 @@ function drawPost( $post, $showAnswerButton = false ) {
 	$result = '<div class="row">';
 	$result .= '<div class="col-lg-1"></div>';
 	
-	$result .= '<div class="col-1 postLeft">';
+	$result .= '<div class="col-lg-1 d-none d-lg-block postLeft">';
+	
+	$result .= '<div style="display:inline-block;">';
 		
 	$result .= '<svg class="vote'.$up.'" val_target="'.$post->uid.'" val_data="1" viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#caret-top"></use></svg>';
 	$result .= '<span class="vote" val_target="'.$post->uid.'"  val_data="0">'.$post->rating.'</span>';
 	$result .= '<svg class="vote'.$down.'" val_target="'.$post->uid.'"  val_data="-1" viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#caret-bottom"></use></svg>';
 	
 	$result .= '</div>';
+
+	$result .= '</div>';
 	
-	$result .= '<div class="col-11 col-lg-8 postframe">';
+	$result .= '<div class="col-12 col-lg-8 postframe">';
 		
 	$result .= '<h1>';
 	if($post->blocked) {
@@ -153,7 +157,17 @@ function drawPost( $post, $showAnswerButton = false ) {
 	$result .= '<div class="w-100"></div>';
 	$result .= '<div class="col-lg-2"></div>';
 	
-	$result .= '<div class="col-12 col-lg-10 postBottom">';
+	$result .= '<div class="col-3 d-lg-none postLeft postBottom pr-0">';
+	$result .= '<div style="display:inline-flex;">';
+		
+	$result .= '<svg class="vote'.$up.'" val_target="'.$post->uid.'" val_data="1" viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#caret-top"></use></svg>';
+	$result .= '<span class="vote" val_target="'.$post->uid.'"  val_data="0">'.$post->rating.'</span>';
+	$result .= '<svg class="vote'.$down.'" val_target="'.$post->uid.'"  val_data="-1" viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#caret-bottom"></use></svg>';
+	
+	$result .= '</div>';
+	$result .= '</div>';
+	
+	$result .= '<div class="col-9 col-lg-10 postBottom px-0">';
 	
 	$result .= '<a id="comment"></a>';
 	$result .= '<a href="/user/'.$post->author.'">'.$post->author.'</a> '.calcDate($post->date).' <a href="'.$post->link.'#comment" title="'.$post->allCommentsCount.' '.$commentText.'">';
@@ -173,8 +187,6 @@ function drawPost( $post, $showAnswerButton = false ) {
 	$result .= '</div>';
 	
 	$result .= '</div>';
-	//$result .= '</div>';
-	//$result .= '</div>';
 	
 	return $result;
 		
@@ -210,15 +222,31 @@ function drawComments( $comments, $user = null, $drawChilds = true ) {
 		$result .= '<li class="row">';
 		
 		//$result .= '<div class="commentVote">';
-		$result .= '<div class="col-1 postLeft">';
+		$result .= '<div class="col-1 d-none d-lg-block postLeft">';
+		
+		$result .= '<div style="display:inline-block;">';
+		
 	    $result .= '<svg class="vote'.$up.'" val_target="'.$comment->uid.'" val_data="1" viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#caret-top"></use></svg>';
 	    $result .= '<span class="vote" val_target="'.$comment->uid.'"  val_data="0">'.$comment->rating.'</span>';
 	    $result .= '<svg class="vote'.$down.'" val_target="'.$comment->uid.'"  val_data="-1" viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#caret-bottom"></use></svg>';
+		
+		$result .= '</div>';
+		
 	    $result .= '</div>';
 		
 		//$result .= '<div class="commentInfo">';
-		$result .= '<div class="col-11">';
-		$result .= '<div class="postBottom">
+		$result .= '<div class="col-12 col-lg-11">';
+		$result .= '<div class="postBottom">';
+
+	$result .= '<div class="d-lg-none postLeft" style="display:inline-flex;">';
+		
+	$result .= '<svg class="vote'.$up.'" val_target="'.$comment->uid.'" val_data="1" viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#caret-top"></use></svg>';
+	$result .= '<span class="vote" val_target="'.$comment->uid.'"  val_data="0">'.$comment->rating.'</span>';
+	$result .= '<svg class="vote'.$down.'" val_target="'.$comment->uid.'"  val_data="-1" viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#caret-bottom"></use></svg>';
+	
+	$result .= '</div>';
+		
+		$result .= '
 		<a id="comment'.$comment->uid.'"></a><a href="'.$comment->link.'">
 		<div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#link-intact"></use></svg></div>
 		</a>Ответ <a href="/user/'.$comment->author.'">'.$comment->author.'</a> '.calcDate($comment->date).' '.$delbutton.'</div>';
@@ -280,13 +308,13 @@ function updateContent( $content ) {
 	    $result = str_replace( $match, '<video controls style="max-width:100%;"><source src="'.$mass[2].'" type="video/mp4"></video>', $result);
 	}
 	
-	$markdown1 = '/!\[(.+)\]\((\S+)( ".+"|)\)/';
+	$markdown1 = '/(\s|^)!\[(picture)\]\((\S+)\)(\s|$)/';
 	$matches = array();
 	preg_match_all($markdown1, $content, $matches, PREG_PATTERN_ORDER );
 	foreach( $matches[0] as $match ) {
 	    $mass = array();
 	    preg_match($markdown1, $match, $mass);
-	    $result = str_replace( $match, '<div><img style="max-width:100%;" src="'.$mass[2].'" alt="'.$mass[1].'" title="'.str_replace('"', '', $mass[3]).'" /></div>', $result);
+	    $result = str_replace( $match, '<div><img style="max-width:100%;" src="'.$mass[3].'" alt="'.$mass[2].'" /></div>', $result);
 	}
 	
 	$markdown2 = '/\[(.+)\]\((\S+)\)/';
@@ -348,10 +376,11 @@ function drawTopLine() {
 		$answer .= '<div class="logoutForm">
 			<div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#account-logout"></use></svg></div>
 		</div> 
-		Привет, '.$user->name.' 
+		Привет, <a href="/user/'.$user->name.'">'.$user->name.'</a> 
 		<div style="align-self: flex-start;"><div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#star"></use></svg></div>'.$user->rating.'</div>
 		<a href="/unread/" title="'.$unread.' '.declOfNum($unread,array('непрочитанное','непрочитанных','непрочитанных')).'"><div style="align-self: center;"><div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#chat"></use></svg></div>'.$unread.'</div></a>';
-   	} else {
+		$answer .= '<a href="/registration/?ref='.$bd->getRefCode($user).'">Ссылка для приглашения</a>';
+	} else {
 		$answer .= '
 		<div class="loginForm">
 		    <input type="text" name="login" />
@@ -368,7 +397,7 @@ function drawTopLine() {
 }
 
 function drawPageButton($pageCount, $current) {
-	$maxPageCount = 10;
+	$maxPageCount = 9;
 	
     $uri = $_SERVER['REQUEST_URI'];
     $uri = str_replace('&str='.$current,'',$uri);
