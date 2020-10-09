@@ -91,6 +91,76 @@ function calcDate($cDate) {
 	return $val1.' '.$val2.' назад';
 }
 
+function calcDateSmall($cDate) {
+	 
+	$firstDate = date("Y-m-d H:i:s");
+	//$secondDate = $d; 
+	 
+	$firstDateTimeObject = DateTime::createFromFormat('Y-m-d H:i:s', $firstDate);
+	$secondDateTimeObject = DateTime::createFromFormat('Y-m-d H:i:s', $cDate);
+	 
+	$delta = $secondDateTimeObject->diff($firstDateTimeObject);
+	
+	$years = $delta->format('%y');
+	$months = $delta->format('%m');
+	$days = $delta->format('%d');
+	$hours = $delta->format('%h');
+	$minutes = $delta->format('%i');
+	$seconds = $delta->format('%s');
+	
+	$res = '';
+	$val1 = '';
+	$val2 = '';
+	
+	$yearName = 'г';
+	$montName = 'м';
+	$dayName = 'д';
+	$hourName = 'ч';
+	$minuName = 'мин';
+	$secoName = 'с';
+	
+	if($years > 0) {
+		$val1 = $year.$yearName;
+	}
+	if ($months > 0) {
+		if($val1 == '') {
+			$val1 = $months.$montName;
+		} elseif ($val2 == '') {
+			$val2 = $months.$montName;
+		}
+	}
+	if ($days > 0) {
+		if($val1 == '') {
+			$val1 = $days.$dayName;
+		} elseif ($val2 == '') {
+			$val2 = $days.$dayName;
+		}
+	}
+	if ($hours > 0) {
+		if($val1 == '') {
+			$val1 = $hours.$hourName;
+		} elseif ($val2 == '') {
+			$val2 = $hours.$hourName;
+		}
+	}
+	if ($minutes > 0) {
+		if($val1 == '') {
+			$val1 = $minutes.$minuName;
+		} elseif ($val2 == '') {
+			$val2 = $minutes.$minuName;
+		}
+	}
+	if ($seconds > 0) {
+		if($val1 == '') {
+			$val1 = $seconds.$secoName;
+		} elseif ($val2 == '') {
+			$val2 = $seconds.$secoName;
+		}
+	}
+		
+	return $val1.' '.$val2.' назад';
+}
+
 function drawPost( $post, $showAnswerButton = false ) {
     $user = getUserForDraw();
     $yourVote = 0;
@@ -136,7 +206,7 @@ function drawPost( $post, $showAnswerButton = false ) {
 	if( $post->link != '') {
 		$result .= '<a class="postlink" href="'.$post->link.'">'.$title.'</a>';
 	} else {
-		$result .= $title;//$post->title;
+		$result .= $title;
 	}
 	if( $post->oc ) {
 		$result .= ' <span class="OC">OC</span>';
@@ -145,9 +215,11 @@ function drawPost( $post, $showAnswerButton = false ) {
 		
 	if(!$post->blocked) {
 		if($post->nsfw && $user->ID == 0) {
-			$result .= 'Пост скрыт';
+			$result .= '<div>Пост скрыт</div>';
+		} elseif($post->nsfw) {
+			$result .= '<div class="blured">'.updateContent( $post->content ).'</div>';
 		} else {
-			$result .= updateContent( $post->content );
+			$result .= '<div>'.updateContent( $post->content ).'</div>';
 		}
 	} else {
 	    $result .= updateContent( '~~пост~~' );
@@ -157,20 +229,19 @@ function drawPost( $post, $showAnswerButton = false ) {
 	$result .= '<div class="w-100"></div>';
 	$result .= '<div class="col-lg-2"></div>';
 	
-	$result .= '<div class="col-3 d-lg-none postLeft postBottom pr-0">';
-	$result .= '<div style="display:inline-flex;">';
-		
+	$result .= '<div class="col-12 col-lg-10 postBottom px-0">';
+	
+	$result .= '<div class="d-inline-flex d-lg-none postLeft">';
 	$result .= '<svg class="vote'.$up.'" val_target="'.$post->uid.'" val_data="1" viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#caret-top"></use></svg>';
 	$result .= '<span class="vote" val_target="'.$post->uid.'"  val_data="0">'.$post->rating.'</span>';
 	$result .= '<svg class="vote'.$down.'" val_target="'.$post->uid.'"  val_data="-1" viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#caret-bottom"></use></svg>';
-	
 	$result .= '</div>';
-	$result .= '</div>';
-	
-	$result .= '<div class="col-9 col-lg-10 postBottom px-0">';
 	
 	$result .= '<a id="comment"></a>';
-	$result .= '<a href="/user/'.$post->author.'">'.$post->author.'</a> '.calcDate($post->date).' <a href="'.$post->link.'#comment" title="'.$post->allCommentsCount.' '.$commentText.'">';
+	$result .= '<a href="/user/'.$post->author.'">'.$post->author.'</a> ';
+	$result .= '<div class="d-inline-flex d-lg-none">'.calcDateSmall($post->date).'</div>';
+	$result .= '<div class="d-none d-lg-inline-flex">'.calcDate($post->date).'</div>';
+	$result .= ' <a href="'.$post->link.'#comment" title="'.$post->allCommentsCount.' '.$commentText.'">';
 	$result .= '<div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#comment-square"></use></svg></div> '.$post->allCommentsCount.'</a>'.$delbutton;
 	
 	$result .= '</div>';
@@ -222,15 +293,15 @@ function drawComments( $comments, $user = null, $drawChilds = true ) {
 		$result .= '<li class="row">';
 		
 		//$result .= '<div class="commentVote">';
-		$result .= '<div class="col-1 d-none d-lg-block postLeft">';
+		$result .= '<div class="col-1 d-none d-lg-inline-flex postLeft">';
 		
-		$result .= '<div style="display:inline-block;">';
+		//$result .= '<div style="display:inline-block;">';
 		
 	    $result .= '<svg class="vote'.$up.'" val_target="'.$comment->uid.'" val_data="1" viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#caret-top"></use></svg>';
 	    $result .= '<span class="vote" val_target="'.$comment->uid.'"  val_data="0">'.$comment->rating.'</span>';
 	    $result .= '<svg class="vote'.$down.'" val_target="'.$comment->uid.'"  val_data="-1" viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#caret-bottom"></use></svg>';
 		
-		$result .= '</div>';
+		//$result .= '</div>';
 		
 	    $result .= '</div>';
 		
@@ -238,18 +309,20 @@ function drawComments( $comments, $user = null, $drawChilds = true ) {
 		$result .= '<div class="col-12 col-lg-11">';
 		$result .= '<div class="postBottom">';
 
-	$result .= '<div class="d-lg-none postLeft" style="display:inline-flex;">';
+		$result .= '<div class="d-inline-flex d-lg-none postLeft">';
+			
+		$result .= '<svg class="vote'.$up.'" val_target="'.$comment->uid.'" val_data="1" viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#caret-top"></use></svg>';
+		$result .= '<span class="vote" val_target="'.$comment->uid.'"  val_data="0">'.$comment->rating.'</span>';
+		$result .= '<svg class="vote'.$down.'" val_target="'.$comment->uid.'"  val_data="-1" viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#caret-bottom"></use></svg>';
 		
-	$result .= '<svg class="vote'.$up.'" val_target="'.$comment->uid.'" val_data="1" viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#caret-top"></use></svg>';
-	$result .= '<span class="vote" val_target="'.$comment->uid.'"  val_data="0">'.$comment->rating.'</span>';
-	$result .= '<svg class="vote'.$down.'" val_target="'.$comment->uid.'"  val_data="-1" viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#caret-bottom"></use></svg>';
-	
-	$result .= '</div>';
+		$result .= '</div>';
 		
 		$result .= '
 		<a id="comment'.$comment->uid.'"></a><a href="'.$comment->link.'">
 		<div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#link-intact"></use></svg></div>
-		</a>Ответ <a href="/user/'.$comment->author.'">'.$comment->author.'</a> '.calcDate($comment->date).' '.$delbutton.'</div>';
+		</a>Ответ <a href="/user/'.$comment->author.'">'.$comment->author.'</a>
+		<div class="d-inline-flex d-lg-none">'.calcDateSmall($comment->date).'</div>
+		<div class="d-none d-lg-inline-flex">'.calcDate($comment->date).'</div> '.$delbutton.'</div>';
 		
 		$result .= '<div class="postframe';
 		if(!$comment->blocked) {
@@ -290,7 +363,7 @@ function drawComments( $comments, $user = null, $drawChilds = true ) {
 function updateContent( $content ) {
 	$result = $content;
 
-	$youtube = '/(^|\s)https:\/\/youtu\.be\/(\S+)(\s|$)/';
+	$youtube = '/(^|\s)https:\/\/youtu\.be\/(\S+)(\s|$)/mU';
 	$matches = array();
 	preg_match_all($youtube, $content, $matches, PREG_PATTERN_ORDER );
 	foreach( $matches[0] as $match ) {
@@ -299,25 +372,25 @@ function updateContent( $content ) {
 	    $result = str_replace( $match, '<div class="youtubevideo"><iframe src="https://www.youtube.com/embed/'.$mass[2].'" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>', $result);
 	}
 	
-	$vidos = '/(^|\s)\[video\]\((\S+\.mp4)\)($|\s)/';
+	$vidos = '/\[video\]\((\S+\.mp4)\)/mU';
 	$matches = array();
 	preg_match_all($vidos, $content, $matches, PREG_PATTERN_ORDER );
 	foreach( $matches[0] as $match ) {
 	    $mass = array();
 	    preg_match($vidos, $match, $mass);
-	    $result = str_replace( $match, '<video controls style="max-width:100%;"><source src="'.$mass[2].'" type="video/mp4"></video>', $result);
+	    $result = str_replace( $match, '<video controls style="max-width:100%;"><source src="'.$mass[1].'" type="video/mp4"></video>', $result);
 	}
 	
-	$markdown1 = '/(\s|^)!\[(picture)\]\((\S+)\)(\s|$)/';
+	$markdown1 = '/!\[(.+)\]\((\S+)\)/mU';
 	$matches = array();
 	preg_match_all($markdown1, $content, $matches, PREG_PATTERN_ORDER );
 	foreach( $matches[0] as $match ) {
 	    $mass = array();
 	    preg_match($markdown1, $match, $mass);
-	    $result = str_replace( $match, '<div><img style="max-width:100%;" src="'.$mass[3].'" alt="'.$mass[2].'" /></div>', $result);
+	    $result = str_replace( $match, '<div><img style="max-width:100%;" src="'.$mass[2].'" alt="'.$mass[1].'" /></div>', $result);
 	}
 	
-	$markdown2 = '/\[(.+)\]\((\S+)\)/';
+	$markdown2 = '/\[(.+)\]\((\S+)\)/mU';
 	$matches = array();
 	preg_match_all($markdown2, $content, $matches, PREG_PATTERN_ORDER );
 	foreach( $matches[0] as $match ) {
@@ -326,7 +399,7 @@ function updateContent( $content ) {
 	    $result = str_replace( $match, '<a href="'.$mass[2].'">'.$mass[1].'</a>', $result);
 	}
 	
-	$markdown3 = '/~~(.+)~~/';
+	$markdown3 = '/~~(.+)~~/mU';
 	$matches = array();
 	preg_match_all($markdown3, $content, $matches, PREG_PATTERN_ORDER );
 	foreach( $matches[0] as $match ) {
@@ -335,7 +408,7 @@ function updateContent( $content ) {
 	    $result = str_replace( $match, '<s>'.$mass[1].'</s>', $result);
 	}
 	
-	$markdown4 = '/\*\*(.+)\*\*/';
+	$markdown4 = '/\*\*(.+)\*\*/mU';
 	$matches = array();
 	preg_match_all($markdown4, $content, $matches, PREG_PATTERN_ORDER );
 	foreach( $matches[0] as $match ) {
@@ -344,14 +417,14 @@ function updateContent( $content ) {
 	    $result = str_replace( $match, '<strong>'.$mass[1].'</strong>', $result);
 	}
 
-	$tag = '/#\S+(\s|$)/';
+	$tag = '/#\S+(\s|$)/mU';
 	$matches = array();
 	preg_match_all($tag, $content, $matches, PREG_PATTERN_ORDER );
 	foreach( $matches[0] as $match ) {
 		$result = str_replace( $match, '<a href="/hashtag/'.str_replace('#','',$match).'" />'.$match.'</a>', $result);
 	}
 	
-	$user = '/(^|\s)@\S+(\s|$)/';
+	$user = '/(^|\s)@\S+(\s|$)/mU';
 	$matches = array();
 	preg_match_all($user, $content, $matches, PREG_PATTERN_ORDER );
 	foreach( $matches[0] as $match ) {
