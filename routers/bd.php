@@ -322,7 +322,7 @@ class bd extends mysqli {
 		return $cUser;
 	}
 	
-	function votePost($target, $value, $token) {
+	function votePost($target, $value, $token = '') {
 		$valForVote = 0;
 		if($value > 0) {
 			$valForVote = 1;

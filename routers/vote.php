@@ -9,7 +9,7 @@ function route($method, $urlData, $formData) {
 		if(isset($formData['auth'])) {
 			$result = $db->votePost($formData['target'], $formData['value'], $formData['auth']);
 		} else {
-			$result = $db->votePost($formData['target'], $formData['value']);
+			$result = $db->votePost($formData['target'], $formData['value'], null);
 		}
 		return $result;
 	}

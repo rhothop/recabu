@@ -293,15 +293,15 @@ function drawComments( $comments, $user = null, $drawChilds = true ) {
 		$result .= '<li class="row">';
 		
 		//$result .= '<div class="commentVote">';
-		$result .= '<div class="col-1 d-none d-lg-inline-flex postLeft">';
+		$result .= '<div class="col-1 d-none d-lg-block postLeft">';
 		
-		//$result .= '<div style="display:inline-block;">';
+		$result .= '<div style="display:inline-block;">';
 		
 	    $result .= '<svg class="vote'.$up.'" val_target="'.$comment->uid.'" val_data="1" viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#caret-top"></use></svg>';
 	    $result .= '<span class="vote" val_target="'.$comment->uid.'"  val_data="0">'.$comment->rating.'</span>';
 	    $result .= '<svg class="vote'.$down.'" val_target="'.$comment->uid.'"  val_data="-1" viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#caret-bottom"></use></svg>';
 		
-		//$result .= '</div>';
+		$result .= '</div>';
 		
 	    $result .= '</div>';
 		
