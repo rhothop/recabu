@@ -5,10 +5,35 @@ $( document ).ready( function() {
 	bind();
 });
 
+function bindContentArea() {
+	$( '#content' ).on( 'keyup', function() {
+		var cont = $( '#content' ).val();
+		var search = cont.match(/@(\S{2,})$/);
+		if( search != null ) {
+			getUserList( search[1] );
+		}
+	});
+}
+
+function showUserList( list ) {
+	if( list.length > 0 ) {
+		var selecter = $( '<select>', {
+			style: "position:fixed;"
+		}).prependTo( $( 'body' ) );
+		for( var i = 0; i < list.length; i++ ) {
+			$( '<option>', {
+				value: list[i],
+				append: list[i]
+			}).appendTo( selecter );
+		}
+	}
+}
+
 function bind() {
     $( window ).on( 'scroll', function() {
         scrollFunction();
     });
+	bindContentArea();
     $( '#ontop' ).on( 'click', function() {
           document.body.scrollTop = 0; // For Safari
           document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
@@ -209,6 +234,7 @@ function bind() {
 			$( '#sendComment' ).on( 'click', function() {
 				postPost( '', $( '#content' ).val(), $( '#nsfw' ).prop( 'checked' ), false, $( '#target' ).val() );
 			});
+			bindContentArea();
 		} else {
 			commentForm.remove();
 			commentForm = undefined;

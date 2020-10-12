@@ -8,6 +8,28 @@ function readJson( str ) {
     return result;
 }
 
+function getUserList( mask ) {
+	var request = $.ajax({
+		url: '/db_point/userlist/',
+		method: "POST",
+		data: {mask:mask},
+		dataType: "html",
+		beforeSend: function() {
+		}
+	});
+	
+	request.done(function( msg ) {
+	    var answer = readJson( msg );
+		showUserList( answer );
+	});
+	
+	request.fail(function( jqXHR, textStatus ) {
+		console.log( jqXHR.responseText );
+	});
+	request.always(function() {
+	});
+}
+
 function sendFile( file ) {
 	var request = $.ajax({
 		url: '/upload/',
@@ -38,7 +60,8 @@ function sendFile( file ) {
 		console.log( jqXHR.responseText );
 	});
 	request.always(function() {
-	});}
+	});
+}
 
 function postPost(title, content, nsfw = false, oc = false, parent = 0) {
 	var request = $.ajax({

@@ -16,6 +16,18 @@ class bd extends mysqli {
         }
         $this->set_charset("utf8");
 	}
+	
+	function getUserListByMask($mask) {
+        $queryText = 'SELECT `name` FROM `users` WHERE `name` LIKE "'.$mask.'%"';
+		$arr = array();
+        if($query = $this->query($queryText)) {
+            while($cur = $query->fetch_object()) {
+                $arr[] = $cur->name;
+            }
+        }
+		
+		return $arr;
+	}
 
     function getYourVote($postid,$userid) {
         $queryText = 'SELECT `val` FROM `rating` WHERE `post`='.$postid.' AND `author` = '.$userid;
