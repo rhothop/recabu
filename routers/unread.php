@@ -10,13 +10,18 @@ function route($method, $urlData, $formData) {
 			$str = $formData['str'];
 		}
 		$db = new bd();
-		$posts = $db->getUnreadPage($_COOKIE['auth'],$str);
+		if(isset($formData['auth'])) {
+			$token = $formData['auth'];
+		} else {
+			$token = $_COOKIE['auth'];
+		}
+		$posts = $db->getUnreadPage($token,$str);
 		$resultStr = '';
 		//foreach ( $posts as $post ) {
-			$resultStr .= drawComments( $posts, $db->getUserByToken($_COOKIE['auth']), false );
+			$resultStr .= drawComments( $posts, $db->getUserByToken($token), false );
 		//}
 		
-		$pages = $db->getAnswersCount($_COOKIE['auth']);
+		$pages = $db->getAnswersCount($token);
 		$resultStr .= '<div class="row">'.drawPageButton($pages,$str).'</div>';
 		
 		return $resultStr;

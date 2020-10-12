@@ -11,9 +11,6 @@ function route($method, $urlData, $formData) {
             return 'Сначала авторизуйтесь';
         }
     } elseif ($method === 'POST' && count($urlData) === 0) {
-// 		if(!isset($_COOKIE['auth'])) {
-// 			return false;
-// 		}
 		$inNsfw = false;
 		$inOc = false;
 		$inParent = 0;
@@ -28,11 +25,19 @@ function route($method, $urlData, $formData) {
 		}
 		
 		$db = new bd();
-		$result = $db->addPost($formData['title'], $formData['content'], $inNsfw, $inOc, $inParent);
+		if(isset($formData['auth'])) {
+			$result = $db->addPost($formData['title'], $formData['content'], $inNsfw, $inOc, $inParent, $formData['auth']);
+		} else {
+			$result = $db->addPost($formData['title'], $formData['content'], $inNsfw, $inOc, $inParent);
+		}
 		return $result;
 	} elseif ($method === 'DELETE' && count($urlData) === 0) {
 		$db = new bd();
-		$result = $db->delPost($formData['post'], $_COOKIE['auth']);
+		if(isset($formData['auth'])) {
+			$result = $db->delPost($formData['post'], $formData['auth']);
+		} else {
+			$result = $db->delPost($formData['post'], $_COOKIE['auth']);
+		}
 		return $result;
 	}
  

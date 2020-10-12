@@ -322,14 +322,18 @@ class bd extends mysqli {
 		return $cUser;
 	}
 	
-	function votePost($target, $value) {
+	function votePost($target, $value, $token) {
 		$valForVote = 0;
 		if($value > 0) {
 			$valForVote = 1;
 		} elseif ($value < 0) {
 			$valForVote = -1;
 		}
-		$user = $this->getUserByToken( $_COOKIE['auth'] );
+		if($token != '') {
+			$user = $this->getUserByToken( $token );
+		} else {
+			$user = $this->getUserByToken( $_COOKIE['auth'] );
+		}
 		if($user->ID == 0) {
 			return '{"result":false,"content":"","msg":"Необходимо авторизоваться"}';
 		}
@@ -670,9 +674,13 @@ class bd extends mysqli {
 		return $posts;
 	}
 		
-	function addPost( $cTitle, $cContent, $cNsfw, $cOc, $cParent ) {
+	function addPost( $cTitle, $cContent, $cNsfw, $cOc, $cParent, $userToken = '' ) {
 		
-		$user = $this->getUserByToken( $_COOKIE['auth'] );
+		if($userToken != '') {
+			$user = $this->getUserByToken( $userToken );
+		} else {
+			$user = $this->getUserByToken( $_COOKIE['auth'] );
+		}
 		if($user->ID == 0) {
 			return '{"result":false,"content":"","msg":"Только зарегистрированные пользователи могут это делать"}';
 		}

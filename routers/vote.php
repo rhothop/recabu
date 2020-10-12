@@ -6,7 +6,11 @@ function route($method, $urlData, $formData) {
      
     if ($method === 'POST' && count($urlData) === 0) {
 		$db = new bd();
-		$result = $db->votePost($formData['target'], $formData['value']);
+		if(isset($formData['auth'])) {
+			$result = $db->votePost($formData['target'], $formData['value'], $formData['auth']);
+		} else {
+			$result = $db->votePost($formData['target'], $formData['value']);
+		}
 		return $result;
 	}
  

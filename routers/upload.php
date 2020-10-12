@@ -6,7 +6,7 @@ function route($method, $urlData, $formData) {
      
     if ($method === 'POST') {
 		$uploaddir = './uploads/';
-		if(is_writable($uploaddir)){ 
+		if(is_writable($uploaddir) && ( isset($_COOKIE['auth']) || isset( $formData['auth']))){ 
 			$hashtime = md5(time());
 			$upfile = $_FILES['img'];
 			$newfilename = $hashtime.'_'.str_replace(' ','_',$upfile['name']);
