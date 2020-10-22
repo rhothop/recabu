@@ -218,13 +218,13 @@ function bind() {
 					var cont = $( '#content' ).val();
 					if( input2 != null ) {
 						if( cont === '' ) {
-							$( '#content' ).val( '!['+input2+']('+input+')' );
+							$( '#content' ).val( '['+input2+']('+input+')' );
 						} else {
 							$( '#content' ).val( cont + ' ['+input2+']('+input+')' );
 						}
 					} else {
 						if( cont === '' ) {
-							$( '#content' ).val( '!['+input+']('+input+')' );
+							$( '#content' ).val( '['+input+']('+input+')' );
 						} else {
 							$( '#content' ).val( cont + ' ['+input+']('+input+')' );
 						}
