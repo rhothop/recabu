@@ -470,7 +470,7 @@ function drawTopLine() {
 }
 
 function drawPageButton($pageCount, $current) {
-	$maxPageCount = 9;
+	$maxPageCount = 7;
 	
     $uri = $_SERVER['REQUEST_URI'];
     $uri = str_replace('&str='.$current,'',$uri);
