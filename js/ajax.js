@@ -134,6 +134,7 @@ function registration(login, psw, ref) {
 	request.done(function( msg ) {
 		if(msg === 'good') {
 			alert('Поздравлем с регистрацией. Теперь можно авторизоваться');
+			location.href = '/hot';
 		} else {
 		    alert(msg);
 			//location.reload();
@@ -164,10 +165,6 @@ function login( login, psw ) {
 	    } else {
 	        alert( answer.msg );
 	    }
-		//if(msg) {
-		//	location.reload();
-		//}
-		//alert( msg );
 	});
 	
 	request.fail(function( jqXHR, textStatus ) {
