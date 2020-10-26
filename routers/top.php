@@ -24,7 +24,7 @@ function route($method, $urlData, $formData) {
 		}
 		
 		$pages = $db->getToppostPageCount($date);
-		$resultStr .= '<div class="row">'.drawPageButton($pages,$str).'</div>';
+		$resultStr .= '<div class="row" style="justify-content:center;">'.drawPageButton($pages,$str).'</div>';
 
 		return $resultStr;
  

@@ -496,7 +496,7 @@ function drawPageButton($pageCount, $current) {
     $prev = $current-1;
     $next = $current+1;
     
-	$str = '<nav aria-label="Pages">';
+	$str = '<nav aria-label="Pages" style="justify-content: center;">';
 	$str .= '<ul class="pagination">';
 	$str .= '<li class="page-item"><a class="page-link myPageItem" href="'.$pagelink.'">1<<</a></li>';
 	if($prev < 1) {

@@ -17,7 +17,7 @@ function route($method, $urlData, $formData) {
 		}
 		
 		$pages = $db->getNewpostPageCount();
-		$resultStr .= '<div class="row">'.drawPageButton($pages,$str).'</div>';
+		$resultStr .= '<div class="row" style="justify-content:center;">'.drawPageButton($pages,$str).'</div>';
 		
 		return 'Not work';//$resultStr;
  
@@ -35,7 +35,7 @@ function route($method, $urlData, $formData) {
 		}
 		
 		$pages = $db->getUserPageCount($urlData[0]);
-		$resultStr .= '<div class="row">'.drawPageButton($pages,$str).'</div>';
+		$resultStr .= '<div class="row" style="justify-content:center;">'.drawPageButton($pages,$str).'</div>';
 		
 		return $resultStr;
     }
