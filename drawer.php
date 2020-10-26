@@ -183,7 +183,7 @@ function drawPost( $post, $showAnswerButton = false ) {
 	$result = '<div class="row">';
 	$result .= '<div class="col-lg-1"></div>';
 	
-	$result .= '<div class="col-lg-1 d-none d-lg-block postLeft">';
+	$result .= '<div class="col-lg-1 d-none d-lg-block text-center">';
 	
 	$result .= '<div style="display:inline-block;">';
 		
@@ -231,7 +231,7 @@ function drawPost( $post, $showAnswerButton = false ) {
 	
 	$result .= '<div class="col-12 col-lg-10 postBottom px-0">';
 	
-	$result .= '<div class="d-inline-flex d-lg-none postLeft">';
+	$result .= '<div class="d-inline-flex d-lg-none ml-3 ml-lg-0 text-center">';
 	$result .= '<svg class="vote'.$up.'" val_target="'.$post->uid.'" val_data="1" viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#caret-top"></use></svg>';
 	$result .= '<span class="vote" val_target="'.$post->uid.'"  val_data="0">'.$post->rating.'</span>';
 	$result .= '<svg class="vote'.$down.'" val_target="'.$post->uid.'"  val_data="-1" viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#caret-bottom"></use></svg>';
@@ -293,7 +293,7 @@ function drawComments( $comments, $user = null, $drawChilds = true ) {
 		$result .= '<li class="row">';
 		
 		//$result .= '<div class="commentVote">';
-		$result .= '<div class="col-1 d-none d-lg-block postLeft">';
+		$result .= '<div class="col-1 d-none d-lg-block text-center">';
 		
 		$result .= '<div style="display:inline-block;">';
 		
@@ -309,7 +309,7 @@ function drawComments( $comments, $user = null, $drawChilds = true ) {
 		$result .= '<div class="col-12 col-lg-11">';
 		$result .= '<div class="postBottom">';
 
-		$result .= '<div class="d-inline-flex d-lg-none postLeft">';
+		$result .= '<div class="d-inline-flex d-lg-none ml-3 ml-lg-0 text-center">';
 			
 		$result .= '<svg class="vote'.$up.'" val_target="'.$comment->uid.'" val_data="1" viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#caret-top"></use></svg>';
 		$result .= '<span class="vote" val_target="'.$comment->uid.'"  val_data="0">'.$comment->rating.'</span>';
@@ -356,6 +356,19 @@ function drawComments( $comments, $user = null, $drawChilds = true ) {
 		}
 	}
 	$result .= '</ul>';
+	
+	return $result;
+}
+
+function drawTopList() {
+    $bd = new bd();
+	$result = '<ol>';
+	$users = $bd->getTopTenUsers();
+	for($i = 0; $i < count($users); $i++) {
+		$curname = $users[$i]->name;
+		$result .= '<li><a href="/user/'.$curname.'">'.$curname.'</a></li>';
+	}
+	$result .= '</ol>';
 	
 	return $result;
 }

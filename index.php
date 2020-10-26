@@ -54,6 +54,8 @@
 	    
 	    $pattern = str_replace('%title%','Recabu',$pattern);
    	    $pattern = str_replace('%statusline%',drawTopLine(), $pattern);
+		
+		$pattern = str_replace('%toplist%',drawTopList(),$pattern);
 		echo str_replace('%contcont%', $resultData, $pattern);
 	} else {
 		echo $resultData;

@@ -3,3 +3,4 @@
 .project
 .buildpath
 sys/pikabot.php
+sys/redditbot.php

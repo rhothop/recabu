@@ -51,6 +51,8 @@
 			</nav>
 		</div>
 		
+		<div class="position-absolute d-none d-lg-block" style="z-index:100;"><h1 class="postlink" style="text-align:center;">ТОП 10</h1>%toplist%</div>
+		
 		<div class="container" id="contBlock">
 			%contcont%
 		</div>

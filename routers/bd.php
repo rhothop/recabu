@@ -124,6 +124,53 @@ class bd extends mysqli {
 		return $result;
 	}
 	
+	function getTopTenUsers() {
+		$queryText = 'SELECT
+			`users`.`name`,
+			rate.author,
+			rate.rating/cou.pcount as effect
+		FROM
+			(SELECT
+				`posts`.`author`,
+				SUM(`rating`.`val`) AS rating
+			FROM
+				`rating`
+			INNER JOIN
+				`posts`
+			ON
+				`rating`.`post` = `posts`.`_id`
+			GROUP BY
+				`posts`.`author`)
+		AS
+			rate
+		INNER JOIN
+			(SELECT
+				`posts`.`author`,
+				sum(1) AS pcount
+			FROM
+				`posts`
+			GROUP BY
+				`posts`.`author`)
+		AS
+			cou
+		ON
+			rate.author = cou.author
+		INNER JOIN
+			`users`
+		ON
+			rate.author = `users`.`_id`
+		ORDER BY
+			effect DESC
+		LIMIT 10';
+		$arr = [];
+		if($query = $this->query($queryText)) {
+			while($cur = $query->fetch_object()) {
+				$arr[] = $cur;
+			}
+		}
+		return $arr;
+	}
+	
 	function getUsersCount() {
 	    $queryText = 'SELECT
 	        SUM(1) AS count
@@ -298,15 +345,15 @@ class bd extends mysqli {
 			IFNULL(SUM(`rating`.`val`),0) AS val 
 		FROM 
 			`sessions`
-		LEFT JOIN
+		INNER JOIN
 			`users`
 		ON
 			`sessions`.`user` = `users`.`_id`
-        LEFT JOIN
+        INNER JOIN
         	`posts`
         ON
         	`users`.`_id` = `posts`.`author`
-		LEFT JOIN
+		INNER JOIN
 			`rating`
 		ON
 			`posts`.`_id` = `rating`.`post`
@@ -525,6 +572,8 @@ class bd extends mysqli {
 			`posts`.`date` >= "'.$startDate.'"
 		AND
 			`posts`.`date` <= "'.$endDate.'"
+		AND
+			`posts`.`blocked` = 0
 		GROUP BY
 			`posts`.`_id`
         ORDER BY
@@ -569,6 +618,8 @@ class bd extends mysqli {
 			`posts`.`parent` = 0
 		AND
 		    (`posts`.`title` LIKE "%#'.$hashtag.'%" OR `posts`.`content` LIKE "%#'.$hashtag.'%")
+		AND
+			`posts`.`blocked` = 0
 		GROUP BY
 			`posts`.`_id`
 		ORDER BY
@@ -612,6 +663,8 @@ class bd extends mysqli {
 			`posts`.`parent` = 0
 		AND
 		    `users`.`name` = "'.$username.'"
+		AND
+			`posts`.`blocked` = 0
 		GROUP BY
 			`posts`.`_id`
 		ORDER BY
@@ -655,6 +708,8 @@ class bd extends mysqli {
         	`posts`.`_id` = `rating`.`post`
 		WHERE 
 			`posts`.`parent` = 0
+		AND
+			`posts`.`blocked` = 0
 		GROUP BY
 			`posts`.`_id`
         ORDER BY
