@@ -409,7 +409,7 @@ function updateContent( $content ) {
 	foreach( $matches[0] as $match ) {
 	    $mass = array();
 	    preg_match($markdown2, $match, $mass);
-	    $result = str_replace( $match, '<a href="'.$mass[2].'">'.$mass[1].'</a>', $result);
+	    $result = str_replace( $match, '<a target="blank_" href="'.$mass[2].'">'.$mass[1].'</a>', $result);
 	}
 	
 	$markdown3 = '/~~(.+)~~/mU';
