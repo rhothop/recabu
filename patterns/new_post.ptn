@@ -20,4 +20,5 @@
 		<label class="form-check-label" for="oc">OC</label>
 	</div>
 	<button id="createPost" type="submit" class="btn btn-primary">Опубликовать</button>
+	<div id="msgbox"></div>
 </form>

@@ -31,6 +31,13 @@ function route($method, $urlData, $formData) {
 			$result = $db->addPost($formData['title'], $formData['content'], $inNsfw, $inOc, $inParent);
 		}
 		return $result;
+	} elseif ($method === 'POST' && $urlData[0] === 'boyan') {
+		$result = '';
+		if(isset($formData['incoming'])) {
+			$db = new bd();
+			$result = $db->checkBoyan($formData['incoming']);
+		}
+		return $result;
 	} elseif ($method === 'DELETE' && count($urlData) === 0) {
 		$db = new bd();
 		if(isset($formData['auth'])) {

@@ -294,6 +294,9 @@ function bind() {
 			}
 		}
 	});
+	$( '#content' ).on( 'focusout', function() {
+		sendForBoyan( $( this ).val() );
+	});
 }
 
 //Get the button:

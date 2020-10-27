@@ -55,7 +55,11 @@
 	    $pattern = str_replace('%title%','Recabu',$pattern);
    	    $pattern = str_replace('%statusline%',drawTopLine(), $pattern);
 		
-		$pattern = str_replace('%toplist%',drawTopList(),$pattern);
+		if($router != 'add' && $router != 'rules' ) {
+			$pattern = str_replace('%toplist%','<h1 class="postlink" style="text-align:center;">ТОП 10</h1>'.drawTopList(),$pattern);
+		} else {
+			$pattern = str_replace('%toplist%','',$pattern);
+		}
 		echo str_replace('%contcont%', $resultData, $pattern);
 	} else {
 		echo $resultData;

@@ -882,4 +882,20 @@ class bd extends mysqli {
  
 	return $value;
 	}
+	
+	function checkBoyan($incStr) {
+		$max = 0;
+		$post = 0;
+		$queryText = 'SELECT `_id`,`content` FROM `posts` WHERE `parent` = 0';
+		if($query = $this->query($queryText)) {
+			while($cur = $query->fetch_object()) {
+				similar_text($cur->content, $incStr, $perc);
+				if($perc > $max) {
+					$post = $cur->_id;
+					$max = $perc;
+				}
+			}
+		}
+		return '{"uid":'.$post.',"perc":'.$max.'}';		
+	}
 }

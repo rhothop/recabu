@@ -15,12 +15,22 @@ function route($method, $urlData, $formData) {
 		}
 		$db = new bd();
 		$posts = $db->getTopPosts($str,$date);
-		$resultStr = '<form><input name="date" type="date" value="'.$date.'" /><input type="submit" value="Показать" /></form>';
+		$resultStr = '<div class="row">
+		<div class="col-0 col-lg-2"></div>
+		<div class="col-12 col-lg-10">
+		<form><input name="date" type="date" value="'.$date.'" /><input type="submit" value="Показать" /></form>
+		</div>
+		</div>';
 		foreach ( $posts as $post ) {
 			$resultStr .= drawPost( $post );
 		}
 		if(count($posts) == 0) {
-		    $resultStr .= 'Упс, ничего нет';
+		    $resultStr .= '<div class="row">
+		<div class="col-0 col-lg-2"></div>
+		<div class="col-12 col-lg-10">
+		Упс, ничего нет
+		</div>
+		</div>';
 		}
 		
 		$pages = $db->getToppostPageCount($date);

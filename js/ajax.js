@@ -222,3 +222,29 @@ function votePost( target, val ) {
 	request.always(function() {
 	});
 }
+
+function sendForBoyan( str ) {
+	var request = $.ajax({
+		url: '/add/boyan/',
+		method: "POST",
+		data: { incoming : str},
+		dataType: "html",
+		beforeSend: function() {
+		}
+	});
+	
+	request.done(function( msg ) {
+		var answer = readJson( msg );
+		if( answer.perc > 70 ) {
+			$( '#msgbox' ).html( 'Скорее всего Ваш пост - баян' );
+		} else {
+			$( '#msgbox' ).html( '' );
+		}
+	});
+	
+	request.fail(function( jqXHR, textStatus ) {
+		console.log( jqXHR.responseText );
+	});
+	request.always(function() {
+	});
+}
