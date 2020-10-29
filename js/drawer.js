@@ -103,18 +103,30 @@ function bind() {
 		event.preventDefault();
 		postPost( $( '#title' ).val(), $( '#content' ).val(), $( '#nsfw' ).prop( 'checked' ), $( '#oc' ).prop( 'checked'));
 	});
+	
 	$( '.loginForm input[type="button"]' ).on( 'click', function() {
-		login( $( '.loginForm input[type="text"]' ).val(), $( '.loginForm input[type="password"]' ).val() );
+		var curparent = $ ( this ).parent();
+		login( curparent.find( 'input[type="text"]' ).val(), curparent.find( 'input[type="password"]' ).val() );
 	});
 	$( '.loginForm .icons' ).on( 'click', function() {
-		login( $( '.loginForm input[type="text"]' ).val(), $( '.loginForm input[type="password"]' ).val() );
+		var curparent = $ ( this ).parent();
+		login( curparent.find( 'input[type="text"]' ).val(), curparent.find( 'input[type="password"]' ).val() );
 	});
+	$( '.loginForm .formAction' ).on( 'click', function() {
+		var curparent = $ ( this ).parent();
+		login( curparent.find( 'input[type="text"]' ).val(), curparent.find( 'input[type="password"]' ).val() );
+	});
+	
 	$( '.logoutForm input[type="button"]' ).on( 'click', function() {
 		logout();
 	});
 	$( '.logoutForm .icons' ).on( 'click', function() {
 		logout();
 	});
+	$( '.logoutForm .formAction' ).on( 'click', function() {
+		logout();
+	});
+
 	$( '.vote' ).on( 'click', function() {
 		votePost( $( this ).attr( 'val_target' ), $( this ).attr( 'val_data') );
 	});
@@ -297,6 +309,10 @@ function bind() {
 	$( '#content' ).on( 'focusout', function() {
 		sendForBoyan( $( this ).val() );
 	});
+	
+	// $( 'youtubevideo' ).css( 'height', function() {
+		// alert( this );
+	// });
 }
 
 //Get the button:

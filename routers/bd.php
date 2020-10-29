@@ -61,7 +61,7 @@ class bd extends mysqli {
 	}
 
 	function regNewUser( $login, $psw, $invite = '') {
-	    $refEnabled = true;
+	    $refEnabled = false;
 	    if(!isset($login) || !isset($psw)) {
 	        return 'Bad bad boy';
 	    }

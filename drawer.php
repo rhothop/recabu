@@ -229,7 +229,7 @@ function drawPost( $post, $showAnswerButton = false ) {
 	$result .= '<div class="w-100"></div>';
 	$result .= '<div class="col-lg-2"></div>';
 	
-	$result .= '<div class="col-12 col-lg-10 postBottom px-0">';
+	$result .= '<div class="col-12 col-lg-8 postBottom px-0">';
 	
 	$result .= '<div class="d-inline-flex d-lg-none ml-3 ml-lg-0 text-center">';
 	$result .= '<svg class="vote'.$up.'" val_target="'.$post->uid.'" val_data="1" viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#caret-top"></use></svg>';
@@ -246,9 +246,11 @@ function drawPost( $post, $showAnswerButton = false ) {
 	
 	$result .= '</div>';
 	
+	$result .= '<div class="w-100"></div>';
+	
 	$result .= '<div class="col-lg-2"></div>';
 	
-	$result .= '<div class="col-12 col-lg-10">';
+	$result .= '<div class="col-12 col-lg-8">';
 	if( $showAnswerButton ) {
 		$result .= '<div val_target="'.$post->uid.'"><button class="addComment" type="" class="btn btn-secondary">Ответить</button></div>';
 	}
@@ -362,7 +364,7 @@ function drawComments( $comments, $user = null, $drawChilds = true ) {
 
 function drawTopList() {
     $bd = new bd();
-	$result = '<ol>';
+	$result = '<h1 class="postlink" style="text-align:center;">ТОП 10</h1><ol>';
 	$users = $bd->getTopTenUsers();
 	for($i = 0; $i < count($users); $i++) {
 		$curname = $users[$i]->name;
@@ -376,76 +378,74 @@ function drawTopList() {
 function updateContent( $content ) {
 	$result = $content;
 
-	$youtube = '/(^|\s)https:\/\/youtu\.be\/(\S+)(\s|$)/mU';
-	$matches = array();
-	preg_match_all($youtube, $content, $matches, PREG_PATTERN_ORDER );
-	foreach( $matches[0] as $match ) {
-	    $mass = array();
-	    preg_match($youtube, $match, $mass);
-	    $result = str_replace( $match, '<div class="youtubevideo"><iframe src="https://www.youtube.com/embed/'.$mass[2].'" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>', $result);
+	$youtube = '/\[youtube\]\(https:\/\/youtu\.be\/(\S+)\)/mU';
+	$youtube = '/\[youtube\]\((\S+)\)/mU';
+	$matches = [];
+	preg_match_all($youtube, $content, $matches, PREG_SET_ORDER );
+	foreach($matches as $yvid) {
+		$videolink = $yvid[1];
+		$droper = [];
+		$vidid = '';
+		preg_match('/https:\/\/\S+v=(\S+)(&|$)/mU',$videolink,$droper);
+		if(count($droper) != 0) {
+			$vidid = $droper[1];
+		} else {
+			preg_match('/https:\/\/\S+be\/(\S+)(&|$)/mU',$videolink,$droper);
+			if(count($droper) != 0) {
+				$vidid = $droper[1];
+			}
+		}
+		$result = str_replace($yvid[0],'<div class="youtubevideo"><iframe src="https://www.youtube.com/embed/'.$vidid.'" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>', $result);
 	}
 	
+	
 	$vidos = '/\[video\]\((\S+\.mp4)\)/mU';
-	$matches = array();
-	preg_match_all($vidos, $content, $matches, PREG_PATTERN_ORDER );
-	foreach( $matches[0] as $match ) {
-	    $mass = array();
-	    preg_match($vidos, $match, $mass);
-	    $result = str_replace( $match, '<video controls style="max-width:100%;"><source src="'.$mass[1].'" type="video/mp4"></video>', $result);
+	$matches = [];
+	preg_match_all($vidos, $content, $matches, PREG_SET_ORDER );
+	foreach($matches as $video) {
+	    $result = str_replace( $video[0], '<video controls style="max-width:100%;"><source src="'.$video[1].'" type="video/mp4"></video>', $result);
 	}
 	
 	$markdown1 = '/!\[(.+)\]\((\S+)\)/mU';
-	$matches = array();
-	preg_match_all($markdown1, $content, $matches, PREG_PATTERN_ORDER );
-	foreach( $matches[0] as $match ) {
-	    $mass = array();
-	    preg_match($markdown1, $match, $mass);
-	    $result = str_replace( $match, '<div><img style="max-width:100%;" src="'.$mass[2].'" alt="'.$mass[1].'" /></div>', $result);
+	$matches = [];
+	preg_match_all($markdown1, $content, $matches, PREG_SET_ORDER );
+	foreach ($matches as $pic) {
+	    $result = str_replace( $pic[0], '<div><img style="max-width:100%;" src="'.$pic[2].'" alt="'.$pic[1].'" /></div>', $result);
 	}
 	
 	$markdown2 = '/\[(.+)\]\((\S+)\)/mU';
-	$matches = array();
-	preg_match_all($markdown2, $content, $matches, PREG_PATTERN_ORDER );
-	foreach( $matches[0] as $match ) {
-	    $mass = array();
-	    preg_match($markdown2, $match, $mass);
-	    $result = str_replace( $match, '<a target="blank_" href="'.$mass[2].'">'.$mass[1].'</a>', $result);
+	$matches = [];
+	preg_match_all($markdown2, $content, $matches, PREG_SET_ORDER );
+	foreach($matches as $link) {
+	    $result = str_replace( $link[0], '<a target="blank_" href="'.$link[2].'">'.$link[1].'</a>', $result);
 	}
 	
 	$markdown3 = '/~~(.+)~~/mU';
-	$matches = array();
-	preg_match_all($markdown3, $content, $matches, PREG_PATTERN_ORDER );
-	foreach( $matches[0] as $match ) {
-	    $mass = array();
-	    preg_match($markdown3, $match, $mass);
-	    $result = str_replace( $match, '<s>'.$mass[1].'</s>', $result);
+	$matches = [];
+	preg_match_all($markdown3, $content, $matches, PREG_SET_ORDER );
+	foreach($matches as $cross) {
+	    $result = str_replace( $cross[0], '<s>'.$cross[1].'</s>', $result);
 	}
 	
 	$markdown4 = '/\*\*(.+)\*\*/mU';
-	$matches = array();
-	preg_match_all($markdown4, $content, $matches, PREG_PATTERN_ORDER );
-	foreach( $matches[0] as $match ) {
-	    $mass = array();
-	    preg_match($markdown4, $match, $mass);
-	    $result = str_replace( $match, '<strong>'.$mass[1].'</strong>', $result);
+	$matches = [];
+	preg_match_all($markdown4, $content, $matches, PREG_SET_ORDER );
+	foreach($matches as $bold) {
+	    $result = str_replace( $bold[0], '<strong>'.$bold[1].'</strong>', $result);
 	}
 
-	$tag = '/#\S+(\s|$)/mU';
-	$matches = array();
-	preg_match_all($tag, $content, $matches, PREG_PATTERN_ORDER );
-	foreach( $matches[0] as $match ) {
-		$result = str_replace( $match, '<a href="/hashtag/'.str_replace('#','',$match).'" />'.$match.'</a>', $result);
+	$tag = '/(^|\s)#(\S+)[\s$\.,!?]/mU';
+	$matches = [];
+	preg_match_all($tag, $content, $matches, PREG_SET_ORDER );
+	foreach($matches as $tag) {
+		$result = str_replace( $tag[0], '<a href="/hashtag/'.$tag[2].'" />'.$tag[0].'</a>', $result);
 	}
 	
-	$user = '/(^|\s)@\S+(\s|$)/mU';
-	$matches = array();
-	preg_match_all($user, $content, $matches, PREG_PATTERN_ORDER );
-	foreach( $matches[0] as $match ) {
-	    $userlink = str_replace('@','',$match);
-	    $userlink = str_replace(',','',$userlink);
-	    $userlink = str_replace('.','',$userlink);
-	    $userlink = trim($userlink);
-		$result = str_replace( $match, '<a href="/user/'.$userlink.'" />'.$match.'</a>', $result);
+	$user = '/(^|\s)@(\S+)[\s$\.,!?]/mU';
+	$matches = [];
+	preg_match_all($user, $content, $matches, PREG_SET_ORDER );
+	foreach($matches as $userlink) {
+		$result = str_replace( $userlink[0], '<a href="/user/'.$userlink[2].'" />'.$userlink[0].'</a>', $result);
 	}
 	
 	$result = nl2br($result);
@@ -459,16 +459,43 @@ function drawTopLine() {
     $answer = '';
 	if($user != null) {
 	    $unread = $bd->getUnreadCount($user);
-		$answer .= '<div class="logoutForm">
-			<div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#account-logout"></use></svg></div>
-		</div> 
-		Привет, <a href="/user/'.$user->name.'">'.$user->name.'</a> 
-		<div style="align-self: flex-start;"><div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#star"></use></svg></div>'.$user->rating.'</div>
-		<a href="/unread/" title="'.$unread.' '.declOfNum($unread,array('непрочитанное','непрочитанных','непрочитанных')).'"><div style="align-self: center;"><div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#chat"></use></svg></div>'.$unread.'</div></a>';
-		$answer .= '<a href="/registration/?ref='.$bd->getRefCode($user).'">Ссылка для приглашения</a>';
+		$answer .= '
+		<div class="d-lg-none">
+			<div class="logoutForm nav-item">
+				<div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#account-logout"></use></svg></div>
+			</div>
+			<div class="nav-item">
+				Привет, <a href="/user/'.$user->name.'">'.$user->name.'</a>
+			</div>
+			<div class="nav-item">
+				<div style="align-self: flex-start;">
+					<div class="icons">
+						<svg viewBox="0 0 8 8">
+							<use xlink:href="/images/sprite.svg#star"></use>
+						</svg>
+					</div>
+					'.$user->rating.'
+				</div>
+			</div>
+			<div class="nav-item">
+				<a href="/unread/" title="'.$unread.' '.declOfNum($unread,array('непрочитанное','непрочитанных','непрочитанных')).'">
+					<div style="align-self: center;">
+						<div class="icons">
+							<svg viewBox="0 0 8 8">
+								<use xlink:href="/images/sprite.svg#chat"></use>
+							</svg>
+						</div>
+						'.$unread.'
+					</div>
+				</a>
+			</div>
+			<div class="nav-item">
+				<a href="/registration/?ref='.$bd->getRefCode($user).'">Ссылка для приглашения</a>
+			</div>';
 	} else {
 		$answer .= '
-		<div class="loginForm">
+		<div class="d-lg-none">
+		<div class="loginForm nav-item">
 		    <input type="text" name="login" />
 		    <input type="password" name="password" />
 			<div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#account-login"></use></svg></div>
@@ -477,8 +504,49 @@ function drawTopLine() {
    	}
     $usersCount = $bd->getUsersCount();
     if($usersCount != null) {
-        $answer .= '<div style="align-self: flex-start;"><div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#people"></use></svg></div>'.$usersCount.'</div>';
+        $answer .= '<div class="nav-item"><div style="align-self: flex-start;"><div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#people"></use></svg></div>'.$usersCount.'</div></div>';
     }
+    return '</div>'.$answer;
+}
+
+function drawUserMenu() {
+    $user = getUserForDraw();
+    $bd = new bd();
+    $answer = '';
+	if($user != null) {
+	    $unread = $bd->getUnreadCount($user);
+		$answer .= '<div><a href="/user/'.$user->name.'/">'.$user->name.'</a></div>';
+		$answer .= '<div>РЕЙТИНГ '.$user->rating.'</div>';
+		$answer .= '<div><a href="/unread/">ОТВЕТЫ';
+		if($unread > 0 ) {
+			$answer .= '<span class="unread_count">'.$unread.'</span>';
+		}
+		$answer .= '</a></div>';
+		$answer .= '<div class="logoutForm"><div class="formAction">ВЫЙТИ</div></div>';
+		
+	} else {
+		$answer .= '
+		<div class="loginForm">
+			<div>
+				<input type="text" name="login" />
+			</div>
+			<div>
+				<input type="password" name="password" />
+			</div>
+			<div class="formAction">
+				ВОЙТИ
+			</div>
+			<div>
+				<a href="/registration/">Зарегистрироваться</a>
+			</div>
+		</div>';
+   	}
+	
+	$usersCount = $bd->getUsersCount();
+    if($usersCount != null) {
+        $answer .= '<div>Пользователей '.$usersCount.'</div>';
+    }
+
     return $answer;
 }
 

@@ -10,12 +10,7 @@
 	</head>
 	<body>
 		<div style="position:fixed;top:0;right:0;z-index:1;">
-			<div>
-				<input class="themeChange" param="dark" type="radio" name="themeChange" %checked1%/>темная
-			</div>
-			<div>
-				<input class="themeChange" param="light" type="radio" name="themeChange" %checked2%/>светлая
-			</div>
+			
 		</div>
 		<div id="ontop"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#arrow-circle-top"></use></svg></div>
 		<div class="container-fluid" id="menuTop">
@@ -26,6 +21,10 @@
 				<div class="collapse navbar-collapse" id="navbarTop1">
 					<div class="navbar-nav">
 					    %statusline%
+						<div>
+							<input id="darktheme1" class="themeChange" param="dark" type="radio" name="themeChange1" %checked1%/><label class="darklabel" for="darktheme1"></label>
+							<input id="lighttheme1" class="themeChange" param="light" type="radio" name="themeChange1" %checked2%/><label class="lightlabel" for="lighttheme1"></label>
+						</div>
 					</div>
 				</div>
 			</nav>
@@ -51,7 +50,14 @@
 			</nav>
 		</div>
 		
-		<div class="position-absolute d-none d-lg-block" style="z-index:100;">%toplist%</div>
+		<div class="position-absolute d-none d-lg-block G_left_block" >%toplist%</div>
+		<div class="position-absolute d-none d-lg-block G_right_block col-lg-2 text-center" >
+			%usermenu%
+			<div>
+				<input id="darktheme2" class="themeChange" param="dark" type="radio" name="themeChange2" %checked1%/><label class="darklabel" for="darktheme2"></label>
+				<input id="lighttheme2" class="themeChange" param="light" type="radio" name="themeChange2" %checked2%/><label class="lightlabel" for="lighttheme2"></label>
+			</div>
+		</div>
 		
 		<div class="container" id="contBlock">
 			%contcont%
