@@ -3,7 +3,7 @@ require_once('bd.php');
 require_once('./postObject.php');
 include_once('./drawer.php');
 
-function route($method, $urlData, $formData) {
+function route($method, $urlData, $formData, $lang = 'ru_ru') {
     if ($method === 'GET' && count($urlData) === 0) {
 
 		return 'Not work';//$resultStr;
@@ -18,7 +18,7 @@ function route($method, $urlData, $formData) {
 		$posts = $db->getTagPosts($urlData[0],$str);
 		$resultStr = '';
 		foreach ( $posts as $post ) {
-			$resultStr .= drawPost( $post );
+			$resultStr .= drawPost( $post, false, $lang );
 		}
 		
 		//$pages = $db->getUserPageCount($urlData[0]);

@@ -25,13 +25,25 @@
 	
 	include_once( $router_address );
 	
-	$resultData = route($method, $urlData, $formData);
+	$langs = ['ru','en'];
+	$lang = 'ru_ru';
+	if(isset($_COOKIE['lang'])) {
+		$lang = $_COOKIE['lang'];
+	} elseif (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+		$lang_temp = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+		if (in_array($lang_temp, $langs)) {
+			$lang = $lang_temp.'_'.$lang_temp;
+		}
+	}
+
+	$resultData = route($method, $urlData, $formData, $lang);
 	$theme = 'dark';
 	if(isset($_COOKIE['theme'])) {
 	    $theme = $_COOKIE['theme'];
 	}
 	
 	if( $method === 'GET' ) {
+		
 	    if($theme === 'dark') {
 	        $style = '<link rel="stylesheet" href="/css/style_dark.css">';
 	        $navbarclass = 'navbar-dark bg-dark';
@@ -43,22 +55,34 @@
 	        $check1 = '';
 	        $check2 = 'checked ';
 	    }
+		if($lang === 'en_en') {
+	        $checklang1 = '';
+	        $checklang2 = 'checked ';
+	    } else {
+	        $checklang1 = 'checked ';
+	        $checklang2 = '';
+	    }
+
 	    
 	    $pattern = file_get_contents('./patterns/pattern.ptn');
 	    
 	    $pattern = str_replace('%themetheme%', $style, $pattern);
 	    $pattern = str_replace('%navbarclass%', $navbarclass, $pattern);
+	    $pattern = str_replace('%navbarmenu%', drawNavBar($lang), $pattern);
 
 	    $pattern = str_replace('%checked1%', $check1, $pattern);
 	    $pattern = str_replace('%checked2%', $check2, $pattern);
+
+	    $pattern = str_replace('%checkedlang1%', $checklang1, $pattern);
+	    $pattern = str_replace('%checkedlang2%', $checklang2, $pattern);
 	    
 	    $pattern = str_replace('%title%','Recabu',$pattern);
-   	    $pattern = str_replace('%statusline%',drawTopLine(), $pattern);
+   	    $pattern = str_replace('%statusline%',drawTopLine($lang), $pattern);
 		
-		$pattern = str_replace('%usermenu%',drawUserMenu(),$pattern);
+		$pattern = str_replace('%usermenu%',drawUserMenu($lang),$pattern);
 		
 		if($router != 'add' && $router != 'rules' ) {
-			$pattern = str_replace('%toplist%',drawTopList(),$pattern);
+			$pattern = str_replace('%toplist%',drawTopList($lang),$pattern);
 		} else {
 			$pattern = str_replace('%toplist%','',$pattern);
 		}

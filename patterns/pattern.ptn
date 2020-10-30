@@ -25,6 +25,10 @@
 							<input id="darktheme1" class="themeChange" param="dark" type="radio" name="themeChange1" %checked1%/><label class="darklabel" for="darktheme1"></label>
 							<input id="lighttheme1" class="themeChange" param="light" type="radio" name="themeChange1" %checked2%/><label class="lightlabel" for="lighttheme1"></label>
 						</div>
+						<div>
+							<input id="langru1" class="langChange" param="ru_ru" type="radio" name="langChange1" %checkedlang1%/><label class="ruslabel" for="langru1"></label>
+							<input id="langen1" class="langChange" param="en_en" type="radio" name="langChange1" %checkedlang2%/><label class="englabel" for="langen1"></label>
+						</div>
 					</div>
 				</div>
 			</nav>
@@ -39,12 +43,13 @@
 				</button>
 				<div class="collapse navbar-collapse" id="navbarTop2">
 					<div class="navbar-nav">
-					    <a class="nav-item nav-link" href="/rules/">Правила</a>
+						%navbarmenu%
+					    <!-- <a class="nav-item nav-link" href="/rules/">Правила</a>
 						<a class="nav-item nav-link" href="/add/">Добавить</a>
 						<a class="nav-item nav-link" href="/new/">Свежее</a>
 						<a class="nav-item nav-link" href="/top/">Лучшее</a>
 						<a class="nav-item nav-link" href="/hot/">Горячее</a>
-						<!-- <a class="nav-item nav-link disabled" href="#">Горячее</a>-->
+						<a class="nav-item nav-link disabled" href="#">Горячее</a>-->
 					</div>
 				</div>
 			</nav>
@@ -56,6 +61,10 @@
 			<div>
 				<input id="darktheme2" class="themeChange" param="dark" type="radio" name="themeChange2" %checked1%/><label class="darklabel" for="darktheme2"></label>
 				<input id="lighttheme2" class="themeChange" param="light" type="radio" name="themeChange2" %checked2%/><label class="lightlabel" for="lighttheme2"></label>
+			</div>
+			<div>
+				<input id="langru2" class="langChange" param="ru_ru" type="radio" name="langChange2" %checkedlang1%/><label class="ruslabel" for="langru2"></label>
+				<input id="langen2" class="langChange" param="en_en" type="radio" name="langChange2" %checkedlang2%/><label class="englabel" for="langen2"></label>
 			</div>
 		</div>
 		

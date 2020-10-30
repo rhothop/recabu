@@ -1,8 +1,21 @@
 var commentForm;
 
+function resizeTube() {
+	var youtubes = $( '.youtubevideo iframe' ).toArray();
+	for( var i = 0; i < youtubes.length; i++) {
+		var cur = $( youtubes[i] );
+		var width = cur.parent().parent().width();
+		cur.css( 'width', width );
+		var newHeight = width / 16 * 9;
+		cur.css( 'height', newHeight );
+	}
+
+}
+
 $( document ).ready( function() {
 	//alert( showData );
 	bind();
+	resizeTube();
 });
 
 function bindContentArea() {
@@ -33,6 +46,9 @@ function bind() {
     $( window ).on( 'scroll', function() {
         scrollFunction();
     });
+	$(window).on( 'resize', function() {
+		resizeTube();
+	});
 	bindContentArea();
     $( '#ontop' ).on( 'click', function() {
           document.body.scrollTop = 0; // For Safari
@@ -88,7 +104,12 @@ function bind() {
 			document.cookie = 'theme=light; path=/; secure; domain=recabu.cf; samesite=lax';
 		}
 		location.reload();
+	});
+	$( '.langChange' ).on( 'click', function() {
+		document.cookie = 'lang='+$( this ).attr( 'param' )+'; path=/; secure; domain=recabu.cf; samesite=lax';
+		location.reload();
 	});		
+	
 	$( '.blured' ).on( 'click', function() {
 		$( this ).removeClass( 'blured' );
 	});
@@ -248,6 +269,7 @@ function bind() {
 			});
 			bindContentArea();
 		} else {
+			//if( $( this ).parent() == commentForm.parent() ) {
 			commentForm.remove();
 			commentForm = undefined;
 		}
@@ -309,10 +331,6 @@ function bind() {
 	$( '#content' ).on( 'focusout', function() {
 		sendForBoyan( $( this ).val() );
 	});
-	
-	// $( 'youtubevideo' ).css( 'height', function() {
-		// alert( this );
-	// });
 }
 
 //Get the button:

@@ -1,6 +1,7 @@
 <?php
 require_once('routers/bd.php');
 require_once('userObject.php');
+require_once('languages.php');
 
 function getUserForDraw() {
     if(isset($_COOKIE['auth'])) {
@@ -21,10 +22,9 @@ function declOfNum($n, $text_forms) {
 }
 
 
-function calcDate($cDate) {
+function calcDate($cDate, $lang = 'ru_ru') {
 	 
 	$firstDate = date("Y-m-d H:i:s");
-	//$secondDate = $d; 
 	 
 	$firstDateTimeObject = DateTime::createFromFormat('Y-m-d H:i:s', $firstDate);
 	$secondDateTimeObject = DateTime::createFromFormat('Y-m-d H:i:s', $cDate);
@@ -42,12 +42,23 @@ function calcDate($cDate) {
 	$val1 = '';
 	$val2 = '';
 	
-	$yearName = declOfNum($years,array('год','года','лет'));
-	$montName = declOfNum($months,array('месяц','месяца','месяцев'));
-	$dayName = declOfNum($days,array('день','дня','дней'));
-	$hourName = declOfNum($hours,array('час','часа','часов'));
-	$minuName = declOfNum($minutes,array('минуту','минуты','минут'));
-	$secoName = declOfNum($seconds,array('секунду','секунды','секунд'));
+	if($lang === 'en_en') {
+		$yearName = 'year'.($years>1 ? 's' : '');
+		$montName = 'month'.($months>1 ? 's' : '');
+		$dayName = 'day'.($days>1 ? 's' : '');
+		$hourName = 'hour'.($hours>1 ? 's' : '');
+		$minuName = 'minute'.($minutes>1 ? 's' : '');
+		$secoName = 'second'.($seconds>1 ? 's' : '');
+		$agoName = ' ago';
+	} else {
+		$yearName = declOfNum($years,['год','года','лет']);
+		$montName = declOfNum($months,['месяц','месяца','месяцев']);
+		$dayName = declOfNum($days,['день','дня','дней']);
+		$hourName = declOfNum($hours,['час','часа','часов']);
+		$minuName = declOfNum($minutes,['минуту','минуты','минут']);
+		$secoName = declOfNum($seconds,['секунду','секунды','секунд']);
+		$agoName = ' назад';
+	}
 	
 	if($years > 0) {
 		$val1 = $year.' '.$yearName;
@@ -88,10 +99,10 @@ function calcDate($cDate) {
 		}
 	}
 		
-	return $val1.' '.$val2.' назад';
+	return $val1.' '.$val2.$agoName;
 }
 
-function calcDateSmall($cDate) {
+function calcDateSmall($cDate, $lang = 'ru_ru') {
 	 
 	$firstDate = date("Y-m-d H:i:s");
 	//$secondDate = $d; 
@@ -112,12 +123,23 @@ function calcDateSmall($cDate) {
 	$val1 = '';
 	$val2 = '';
 	
-	$yearName = 'г';
-	$montName = 'м';
-	$dayName = 'д';
-	$hourName = 'ч';
-	$minuName = 'мин';
-	$secoName = 'с';
+	if($lang === 'en_en') {
+		$yearName = 'y';
+		$montName = 'm';
+		$dayName = 'd';
+		$hourName = 'h';
+		$minuName = 'min';
+		$secoName = 's';
+		$agoName = ' ago';
+	} else {
+		$yearName = 'г';
+		$montName = 'м';
+		$dayName = 'д';
+		$hourName = 'ч';
+		$minuName = 'мин';
+		$secoName = 'с';
+		$agoName = ' назад';
+	}
 	
 	if($years > 0) {
 		$val1 = $year.$yearName;
@@ -158,10 +180,13 @@ function calcDateSmall($cDate) {
 		}
 	}
 		
-	return $val1.' '.$val2.' назад';
+	return $val1.' '.$val2.$agoName;
 }
 
-function drawPost( $post, $showAnswerButton = false ) {
+function drawPost( $post, $showAnswerButton = false, $lang = 'ru_ru' ) {
+	
+	$langcl = new languages($lang);
+	
     $user = getUserForDraw();
     $yourVote = 0;
     $up = '';
@@ -199,7 +224,7 @@ function drawPost( $post, $showAnswerButton = false ) {
 		
 	$result .= '<h1>';
 	if($post->blocked) {
-		$title = '[Пост удален]';
+		$title = '['.$langcl->dic['deleted'].']';
 	} else {
 		$title = $post->title;
 	}
@@ -215,14 +240,14 @@ function drawPost( $post, $showAnswerButton = false ) {
 		
 	if(!$post->blocked) {
 		if($post->nsfw && $user->ID == 0) {
-			$result .= '<div>Пост скрыт</div>';
+			$result .= '<div>'.$langcl->dic['hidden'].'</div>';
 		} elseif($post->nsfw) {
 			$result .= '<div class="blured">'.updateContent( $post->content ).'</div>';
 		} else {
 			$result .= '<div>'.updateContent( $post->content ).'</div>';
 		}
 	} else {
-	    $result .= updateContent( '~~пост~~' );
+	    $result .= updateContent( '~~'.$langcl->dic['post'].'~~' );
 	}
 	
 	$result .= '</div>';
@@ -239,8 +264,8 @@ function drawPost( $post, $showAnswerButton = false ) {
 	
 	$result .= '<a id="comment"></a>';
 	$result .= '<a href="/user/'.$post->author.'">'.$post->author.'</a> ';
-	$result .= '<div class="d-inline-flex d-lg-none">'.calcDateSmall($post->date).'</div>';
-	$result .= '<div class="d-none d-lg-inline-flex">'.calcDate($post->date).'</div>';
+	$result .= '<div class="d-inline-flex d-lg-none">'.calcDateSmall($post->date,$lang).'</div>';
+	$result .= '<div class="d-none d-lg-inline-flex">'.calcDate($post->date,$lang).'</div>';
 	$result .= ' <a href="'.$post->link.'#comment" title="'.$post->allCommentsCount.' '.$commentText.'">';
 	$result .= '<div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#comment-square"></use></svg></div> '.$post->allCommentsCount.'</a>'.$delbutton;
 	
@@ -252,10 +277,10 @@ function drawPost( $post, $showAnswerButton = false ) {
 	
 	$result .= '<div class="col-12 col-lg-8">';
 	if( $showAnswerButton ) {
-		$result .= '<div val_target="'.$post->uid.'"><button class="addComment" type="" class="btn btn-secondary">Ответить</button></div>';
+		$result .= '<div val_target="'.$post->uid.'"><button class="addComment" type="" class="btn btn-secondary">'.$langcl->dic['reply'].'</button></div>';
 	}
 	
-	$result .= drawComments( $post->childs, $user, true );
+	$result .= drawComments( $post->childs, $user, true, $lang );
 	
 	$result .= '</div>';
 	
@@ -265,10 +290,12 @@ function drawPost( $post, $showAnswerButton = false ) {
 		
 }
 
-function drawComments( $comments, $user = null, $drawChilds = true ) {
+function drawComments( $comments, $user = null, $drawChilds = true, $lang = 'ru_ru' ) {
 	if( count( $comments ) == 0 ) {
 		return '';
 	}
+	
+	$langcl = new languages( $lang );
 
 	$result = '<ul>';
 	foreach( $comments as $comment ) {
@@ -308,7 +335,7 @@ function drawComments( $comments, $user = null, $drawChilds = true ) {
 	    $result .= '</div>';
 		
 		//$result .= '<div class="commentInfo">';
-		$result .= '<div class="col-12 col-lg-11">';
+		$result .= '<div class="col-12 col-lg-'.($drawChilds ? '11' : '9').'">';
 		$result .= '<div class="postBottom">';
 
 		$result .= '<div class="d-inline-flex d-lg-none ml-3 ml-lg-0 text-center">';
@@ -322,9 +349,9 @@ function drawComments( $comments, $user = null, $drawChilds = true ) {
 		$result .= '
 		<a id="comment'.$comment->uid.'"></a><a href="'.$comment->link.'">
 		<div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#link-intact"></use></svg></div>
-		</a>Ответ <a href="/user/'.$comment->author.'">'.$comment->author.'</a>
-		<div class="d-inline-flex d-lg-none">'.calcDateSmall($comment->date).'</div>
-		<div class="d-none d-lg-inline-flex">'.calcDate($comment->date).'</div> '.$delbutton.'</div>';
+		</a>'.$langcl->dic['answer'].' <a href="/user/'.$comment->author.'">'.$comment->author.'</a>
+		<div class="d-inline-flex d-lg-none">'.calcDateSmall($comment->date,$lang).'</div>
+		<div class="d-none d-lg-inline-flex">'.calcDate($comment->date,$lang).'</div> '.$delbutton.'</div>';
 		
 		$result .= '<div class="postframe';
 		if(!$comment->blocked) {
@@ -335,9 +362,9 @@ function drawComments( $comments, $user = null, $drawChilds = true ) {
 			}
 			if($comment->nsfw) {
 				if($user == null) {
-					$result .= 'Пост скрыт</div>';
+					$result .= $langcl->dic['hidden'].'</div>';
 				} elseif($user->ID == 0) {
-					$result .= 'Пост скрыт</div>';
+					$result .= $langcl->dic['hidden'].'</div>';
 				} else {
 					$result .= updateContent($comment->content).'</div>';
 				}
@@ -345,16 +372,16 @@ function drawComments( $comments, $user = null, $drawChilds = true ) {
 				$result .= updateContent($comment->content).'</div>';
 			}
 		} else {
-		    $result .= '">'.updateContent( '~~коммент~~' ).'</div>';
+		    $result .= '">'.updateContent( '~~'.$langcl->dic['comment'].'~~' ).'</div>';
 		}
 		
-		$result .= '<div val_target="'.$comment->uid.'"><button class="addComment" type="" class="btn btn-secondary">Ответить</button></div>';
+		$result .= '<div val_target="'.$comment->uid.'"><button class="addComment" type="" class="btn btn-secondary">'.$langcl->dic['reply'].'</button></div>';
 		$result .= '</div>';
 			
 		$result .= '</li>';
 
 		if($drawChilds) {
-		    $result .= drawComments( $comment->childs, $user, $drawChilds );
+		    $result .= drawComments( $comment->childs, $user, $drawChilds, $lang );
 		}
 	}
 	$result .= '</ul>';
@@ -362,9 +389,10 @@ function drawComments( $comments, $user = null, $drawChilds = true ) {
 	return $result;
 }
 
-function drawTopList() {
+function drawTopList($lang = 'ru_ru') {
+	$langcl = new languages($lang);
     $bd = new bd();
-	$result = '<h1 class="postlink" style="text-align:center;">ТОП 10</h1><ol>';
+	$result = '<h1 class="postlink" style="text-align:center;">'.$langcl->dic['top'].' 10</h1><ol>';
 	$users = $bd->getTopTenUsers();
 	for($i = 0; $i < count($users); $i++) {
 		$curname = $users[$i]->name;
@@ -395,7 +423,8 @@ function updateContent( $content ) {
 				$vidid = $droper[1];
 			}
 		}
-		$result = str_replace($yvid[0],'<div class="youtubevideo"><iframe src="https://www.youtube.com/embed/'.$vidid.'" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>', $result);
+		$marker = '<div class="yumarker" style="width:100%;height: 0;opacity: 0;">123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890</div>';
+		$result = str_replace($yvid[0],$marker.'<div class="youtubevideo"><iframe src="https://www.youtube.com/embed/'.$vidid.'" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>', $result);
 	}
 	
 	
@@ -453,7 +482,8 @@ function updateContent( $content ) {
 	return $result;
 }
 
-function drawTopLine() {
+function drawTopLine($lang = 'ru_ru') {
+	$langcl = new languages($lang);
     $user = getUserForDraw();
     $bd = new bd();
     $answer = '';
@@ -490,7 +520,7 @@ function drawTopLine() {
 				</a>
 			</div>
 			<div class="nav-item">
-				<a href="/registration/?ref='.$bd->getRefCode($user).'">Ссылка для приглашения</a>
+				<a href="/registration/?ref='.$bd->getRefCode($user).'">'.$langcl->dic['reflink'].'</a>
 			</div>';
 	} else {
 		$answer .= '
@@ -499,7 +529,7 @@ function drawTopLine() {
 		    <input type="text" name="login" />
 		    <input type="password" name="password" />
 			<div class="icons"><svg viewBox="0 0 8 8"><use xlink:href="/images/sprite.svg#account-login"></use></svg></div>
-		    <a href="/registration/">Зарегистрироваться</a>
+		    <a href="/registration/">'.$langcl->dic['registr'].'</a>
 		</div>';
    	}
     $usersCount = $bd->getUsersCount();
@@ -509,20 +539,23 @@ function drawTopLine() {
     return '</div>'.$answer;
 }
 
-function drawUserMenu() {
+function drawUserMenu($lang = 'ru_ru') {
+
+	$langcl = new languages($lang);
+
     $user = getUserForDraw();
     $bd = new bd();
     $answer = '';
 	if($user != null) {
 	    $unread = $bd->getUnreadCount($user);
 		$answer .= '<div><a href="/user/'.$user->name.'/">'.$user->name.'</a></div>';
-		$answer .= '<div>РЕЙТИНГ '.$user->rating.'</div>';
-		$answer .= '<div><a href="/unread/">ОТВЕТЫ';
+		$answer .= '<div>'.$langcl->dic['rating'].' '.$user->rating.'</div>';
+		$answer .= '<div><a href="/unread/">'.$langcl->dic['messages'];
 		if($unread > 0 ) {
 			$answer .= '<span class="unread_count">'.$unread.'</span>';
 		}
 		$answer .= '</a></div>';
-		$answer .= '<div class="logoutForm"><div class="formAction">ВЫЙТИ</div></div>';
+		$answer .= '<div class="logoutForm"><div class="formAction">'.$langcl->dic['signout'].'</div></div>';
 		
 	} else {
 		$answer .= '
@@ -534,20 +567,34 @@ function drawUserMenu() {
 				<input type="password" name="password" />
 			</div>
 			<div class="formAction">
-				ВОЙТИ
+				'.$langcl->dic['signin'].'
 			</div>
 			<div>
-				<a href="/registration/">Зарегистрироваться</a>
+				<a href="/registration/">'.$langcl->dic['registr'].'</a>
 			</div>
 		</div>';
    	}
 	
 	$usersCount = $bd->getUsersCount();
     if($usersCount != null) {
-        $answer .= '<div>Пользователей '.$usersCount.'</div>';
+        $answer .= '<div>'.$langcl->dic['users'].' '.$usersCount.'</div>';
     }
 
     return $answer;
+}
+
+function drawNavBar($lang = 'ru_ru') {
+	
+	$langcl = new languages($lang);
+		
+	$result .= '';
+	$result .= '<a class="nav-item nav-link" href="/rules/">'.$langcl->dic['rules'].'</a>';
+	$result .= '<a class="nav-item nav-link" href="/add/">'.$langcl->dic['addpost'].'</a>';
+	$result .= '<a class="nav-item nav-link" href="/new/">'.$langcl->dic['newposts'].'</a>';
+	$result .= '<a class="nav-item nav-link" href="/top/">'.$langcl->dic['topposts'].'</a>';
+	$result .= '<a class="nav-item nav-link" href="/hot/">'.$langcl->dic['hotposts'].'</a>';
+
+	return $result;
 }
 
 function drawPageButton($pageCount, $current) {

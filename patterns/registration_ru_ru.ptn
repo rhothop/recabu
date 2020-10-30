@@ -1,4 +1,4 @@
-<form method="post">
+<form method="post" class="col-12 col-lg-8">
 	<div class="form-group">
 		<input type="text" class="form-control" name="login" id="login" aria-describedby="emailHelp" placeholder="Логин" />
 		<input type="password" class="form-control" name="psw1" id="psw1" aria-describedby="emailHelp" placeholder="Пароль" />
